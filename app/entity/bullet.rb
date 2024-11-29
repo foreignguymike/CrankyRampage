@@ -2,14 +2,14 @@ class Bullet < Entity
 
   attr_accessor :remove
 
-  def initialize args, x, y, dx, dy
+  def initialize args, x, y, dx, dy, deg
     super()
     @x = x
     @y = y
     @dx = dx
     @dy = dy
     @remove = false
-    @render_rad = (Math.atan2 dy, dx) * 180 / PI
+    @render_deg = deg
     @time = 0
     set_image args, "machinegun"
   end

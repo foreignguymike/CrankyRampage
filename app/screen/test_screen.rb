@@ -19,11 +19,14 @@ class TestScreen < Screen
     speed = 300 / 60
     dx = mx - @player.x
     dy = my - @player.y
-    puts "new bullet #{dx} #{dy}"
+    deg = (Math.atan2 dy, dx) * 180 / PI
+    deg = (deg / 45).round * 45
+    dx = Math.cos(deg * PI / 180)
+    dy = Math.sin(deg * PI / 180)
     len = Math.sqrt(dx**2 + dy**2)
     dx /= len
     dy /= len
-    @bullets << Bullet.new(args, @player.x + 13 * dx, @player.y + 13 * dy, speed * dx, speed * dy)
+    @bullets << Bullet.new(args, @player.x + 13 * dx, @player.y + 13 * dy - 1, speed * dx, speed * dy, deg)
   end
 
   def update args

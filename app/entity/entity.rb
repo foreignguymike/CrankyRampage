@@ -9,13 +9,13 @@ class Entity
   attr_reader :cw, :ch
 
   # render
-  attr_reader :a, :render_rad, :image, :hide, :hflip
+  attr_reader :a, :render_deg, :image, :hide, :hflip
 	
 	def initialize
     @x = @y = @dx = @dy = 0
     @a = 255
     @cw = @ch = 0
-    @render_rad = 0
+    @render_deg = 0
 	end
 
   def set_image args, region
