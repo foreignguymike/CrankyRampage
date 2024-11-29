@@ -23,6 +23,10 @@ end
 def tick args
   setup_game args
 
+  if args.inputs.keyboard.key_down.f1
+    args.state.debug = !args.state.debug
+  end
+
   # tick screen
   args.outputs[:fbo].w = WIDTH
   args.outputs[:fbo].h = HEIGHT

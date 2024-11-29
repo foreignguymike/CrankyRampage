@@ -33,15 +33,31 @@ class TestScreen < Screen
     @particles << (Particle.new "gunflash", x + dx, y + dy, 0, 0, 3, 2, true)
   end
 
+  private def update_cam mx, my
+    @cam.look_at [@player.x, WIDTH / 2].max, HEIGHT / 2, 0.07
+    # follow mouse
+    # midx = (@player.x + mx) / 2
+    # midy = (@player.y + my) / 2
+    # dx = midx - @player.x
+    # dy = midy - @player.y
+    # dist = Math.sqrt dx**2 + dy**2
+    # if dist > 50
+    #   scale = 50 / dist
+    #   midx = @player.x + dx * scale
+    #   midy = @player.y + dy * scale
+    # end
+    # @cam.look_at midx, HEIGHT / 2, 0.1
+  end
+
   def update args
     # handle key input
     @player.left = args.inputs.left
     @player.right = args.inputs.right
+    if args.inputs.down
+      @player.drop
+    end
     if args.inputs.up
       @player.jump
-    end
-    if args.inputs.keyboard.key_down.one
-      args.state.debug = !args.state.debug
     end
 
     # handle mouse input
@@ -61,7 +77,7 @@ class TestScreen < Screen
     @bullets.reject! { |b| b.remove }
 
     # cam follow player
-    @cam.look_at @player.x, HEIGHT / 2, 0.1
+    update_cam mx, my
 
     # update player
     @player.look_at mx, my
@@ -80,6 +96,8 @@ class TestScreen < Screen
     args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 20, y: args.grid.h - 10, **WHITE }
     args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 20, y: args.grid.h - 30, **WHITE }
     args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 20, y: args.grid.h - 50, **WHITE }
+    args.outputs.labels << { text: "player ground #{@player.on_ground}", x: 20, y: args.grid.h - 70, **WHITE }
+    args.outputs.labels << { text: "player on platform #{@player.wg&.platform}", x: 20, y: args.grid.h - 90, **WHITE }
   end
 
 end
