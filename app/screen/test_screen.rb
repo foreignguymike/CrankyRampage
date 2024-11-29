@@ -3,6 +3,9 @@ class TestScreen < Screen
   def initialize
     @player = Player.new
     @cam = Camera.new
+
+    @player.x = WIDTH / 2
+    @player.y = HEIGHT / 2
   end
 
   def update
@@ -13,12 +16,12 @@ class TestScreen < Screen
     @player.right = $args.inputs.right
     (mx, my) = @cam.from_screen_space($inputs.mouse.x, $inputs.mouse.y)
     
-    @player.lookat mx, my
+    @player.look_at mx, my
     @player.update
   end
 
   def render
-    @cam.render @player
+    @player.render @cam
   end
 
 end

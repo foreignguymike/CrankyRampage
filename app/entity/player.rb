@@ -1,7 +1,8 @@
 class Player < Entity
-  ACCEL = 300 / 60 / 60
-	FRICTION = 200 / 60 / 60
+  ACCEL = 500 / 60 / 60
+	FRICTION = 500 / 60 / 60
 	MAX_SPEED = 50 / 60
+  PI = Math::PI
 
   # movement
   attr_accessor :x, :y, :dx, :dy
@@ -12,25 +13,29 @@ class Player < Entity
   # render
   attr_accessor :image
   attr_accessor :hide
+  attr_accessor :hflip
 
   def initialize
     @x = @y = @dx = @dy = 0
     @cw = @ch = 15
     @mx = @my = 0
+    set_image "playerright"
   end
 
-  def lookat mx, my
-    @mx = mx
-    @my = my
+  def look_at mx, my
+    @rad = Math.atan2(my - @y, mx - x)
+  end
+
+  private def set_image region
+    puts "setting image: #{region}"
+    @image = $args.state.assets.find region
+    @w = @image.tile_w
+    @h = @image.tile_h
   end
 
   def update
     # animate
     # @sprite = "sprites/witch#{1.frame_index(3, 7, true) + 1}.png"
-    puts Math.atan2(@my - @y, @mx - @x)
-    @image = $args.state.assets.find "headhud"
-    @w = @image.tile_w
-    @h = @image.tile_h
 
     # input
     if @left then @dx = (@dx - ACCEL).clamp(-MAX_SPEED, 0) end
@@ -48,6 +53,36 @@ class Player < Entity
     @x += @dx
     @y += @dy
 
+  end
+
+  def render cam
+    @hflip = @rad < -PI / 2 || @rad > PI / 2
+
+    # check rad
+    $args.outputs.labels << { text:"nrad: #{@rad}", x: 20, y: 20 }
+    if @rad > 3 * PI / 8 && @rad < 5 * PI / 8
+      set_image "playerup"
+    elsif @rad < -3 * PI / 8 && @rad > -5 * PI / 8
+      set_image "playerdown"
+    elsif (@rad > 1 * PI / 8 && @rad < 3 * PI / 8) || (@rad > 5 * PI / 8 && @rad < 7 * PI / 8)
+      set_image "playerupright"
+    elsif (@rad < -1 * PI / 8 && @rad > -3 * PI / 8) || (@rad < -5 * PI / 8 && @rad > -7 * PI / 8)
+      set_image "playerdownright"
+    else
+      set_image "playerright"
+    end
+    cam.render self
+    index = 1.frame_index(8, 4, true) + 1
+    if @left || @right || @up || @down
+      if (@right && @hflip) || (@left && !@hflip)
+        set_image "playerwalk#{9 - index}"
+      else
+        set_image "playerwalk#{index}"
+      end
+    else
+      set_image "playeridle"
+    end
+    cam.render self
   end
 
 end

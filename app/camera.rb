@@ -51,6 +51,7 @@ class Camera
           **obj.image,
           anchor_x: 0.5,
           anchor_y: 0.5,
+          flip_horizontally: obj.hflip,
           a: alpha
         }
       end

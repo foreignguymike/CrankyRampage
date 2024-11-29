@@ -1,6 +1,6 @@
 name=pack
 filename=
-output=../sprites
+output=../assets
 
 alias=true
 alphaThreshold=0

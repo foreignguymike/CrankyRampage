@@ -1,3 +1,5 @@
+require 'app/util/texture_atlas_manager'
+
 module Utils
   def self.clearScreen(args, r, g, b, a)
     args.outputs.sprites << {
@@ -5,7 +7,7 @@ module Utils
       y: 0,
       w: args.grid.w,
       h: args.grid.h,
-      path: "sprites/pixel.png",
+      **($args.state.assets.find "pixel"),
       r: r,
       g: g,
       b: b,
