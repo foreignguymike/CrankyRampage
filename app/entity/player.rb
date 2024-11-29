@@ -32,9 +32,7 @@ class Player < Entity
   end
 
   def jump
-    puts "jump() #{@on_ground}"
     if @on_ground
-      puts "JUMPED!"
       @dy = JUMP
     end
   end

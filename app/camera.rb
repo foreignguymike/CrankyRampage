@@ -8,14 +8,6 @@ class Camera
   
   attr_reader :x, :y
 
-  def x=v
-    @x = v - (SCREEN_WIDTH / 2) / SCALE_X
-  end
-
-  def y=v
-    @y = v - (SCREEN_HEIGHT / 2) / SCALE_Y
-  end
-
   def initialize
     @x = 0
     @y = 0

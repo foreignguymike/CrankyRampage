@@ -7,8 +7,7 @@ class TestScreen < Screen
     @player.x = WIDTH / 2
     @player.y = HEIGHT / 2
 
-    @cam.x = @player.x
-    @cam.y = HEIGHT / 2
+    @cam.look_at @player.x, HEIGHT / 2
 
     @walls = []
     @walls << (Utils.center_rect 20, 0, 500, 16)
@@ -28,7 +27,7 @@ class TestScreen < Screen
 
     # cam follow player
     ease = 0.1
-    @cam.look_at @player.x, @player.y, ease
+    @cam.look_at @player.x, HEIGHT / 2, ease
 
     @player.look_at mx, my
     @player.update @walls
