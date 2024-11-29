@@ -18,13 +18,10 @@ class TiledMap
         @map_cols = c[:attributes]["width"].to_i
         @map_rows = c[:attributes]["height"].to_i
         @map_height = @map_rows * @tile_size
-        puts "map height: #{@map_height}"
       when 'objectgroup'
         name = c[:attributes]["name"]
-        puts "found objectgroup #{name}"
         c[:children].each { |wall|
           w = wall[:attributes]
-          puts "found wall #{w}"
           x = w["x"].to_i
           y = w["y"].to_i
           width = w["width"].to_i

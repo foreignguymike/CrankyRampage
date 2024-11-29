@@ -7,15 +7,9 @@ class Player < Entity
 	MAX_SPEED = 70 / 60
   MAX_FALL_SPEED = 200 / 60
   JUMP = 160 / 60
-  PI = Math::PI
 
   # input
   attr_accessor :left, :right
-
-  # render
-  attr_accessor :image
-  attr_accessor :hide
-  attr_accessor :hflip
 
   def initialize
     super
@@ -23,8 +17,8 @@ class Player < Entity
     @cw = 10
     @ch = 32
     @mx = @my = 0
-    @wc
     @on_ground = false
+    @fire_time = 10
   end
 
   def look_at mx, my
@@ -37,14 +31,13 @@ class Player < Entity
     end
   end
 
-  private def set_image args, region
-    @image = args.state.assets.find region
-    @w = @image.tile_w
-    @h = @image.tile_h
-  end
-
-  private def crect x, y
-    return { x: x - @cw / 2, y: y - @ch / 2, w: @cw, h: @ch }
+  def fire
+    if @fire_time > 10
+      @fire_time = 0
+      return true
+    else
+      return false
+    end
   end
 
   def update walls
@@ -94,24 +87,13 @@ class Player < Entity
     @x += dx
     @y += dy
 
+    # shooting
+    @fire_time += 1
+
   end
 
   def render args, cam
     @hflip = @rad < -PI / 2 || @rad > PI / 2
-
-    # render direction
-    if @rad > 3 * PI / 8 && @rad < 5 * PI / 8
-      set_image args, "playerup"
-    elsif @rad < -3 * PI / 8 && @rad > -5 * PI / 8
-      set_image args, "playerdown"
-    elsif (@rad > 1 * PI / 8 && @rad < 3 * PI / 8) || (@rad > 5 * PI / 8 && @rad < 7 * PI / 8)
-      set_image args, "playerupright"
-    elsif (@rad < -1 * PI / 8 && @rad > -3 * PI / 8) || (@rad < -5 * PI / 8 && @rad > -7 * PI / 8)
-      set_image args, "playerdownright"
-    else
-      set_image args, "playerright"
-    end
-    cam.render args, self
 
     # render legs
     if !@on_ground
@@ -125,6 +107,20 @@ class Player < Entity
       end
     else
       set_image args, "playeridle"
+    end
+    cam.render args, self
+
+    # render direction
+    if @rad > 3 * PI / 8 && @rad < 5 * PI / 8
+      set_image args, "playerup"
+    elsif @rad < -3 * PI / 8 && @rad > -5 * PI / 8
+      set_image args, "playerdown"
+    elsif (@rad > 1 * PI / 8 && @rad < 3 * PI / 8) || (@rad > 5 * PI / 8 && @rad < 7 * PI / 8)
+      set_image args, "playerupright"
+    elsif (@rad < -1 * PI / 8 && @rad > -3 * PI / 8) || (@rad < -5 * PI / 8 && @rad > -7 * PI / 8)
+      set_image args, "playerdownright"
+    else
+      set_image args, "playerright"
     end
     cam.render args, self
 

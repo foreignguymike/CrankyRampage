@@ -7,6 +7,8 @@ require 'app/util/utils'
 require 'app/util/texture_atlas_manager'
 require 'app/entity/entity'
 require 'app/entity/player'
+require 'app/entity/bullet'
+require 'app/tiled/tiled_map'
 
 def setup_game args
   return if Kernel.tick_count != 0

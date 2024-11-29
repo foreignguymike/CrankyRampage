@@ -49,7 +49,8 @@ class Camera
           h: sh,
           **obj.image,
           flip_horizontally: obj.hflip,
-          a: alpha
+          a: alpha,
+          angle: obj.render_rad
         }
       end
     }

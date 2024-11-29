@@ -1,9 +1,9 @@
-require 'app/tiled/tiled_map'
-
 class TestScreen < Screen
 
   def initialize
     super
+
+    @bullets = []
 
     @player = Player.new
     @player.x = WIDTH / 2
@@ -12,11 +12,22 @@ class TestScreen < Screen
     @cam.look_at @player.x, HEIGHT / 2
 
     @tiled_map = TiledMap.new "assets/testmap.tmx"
-    puts "walls: #{@tiled_map.walls}"
+  end
+
+  private def add_bullet args, mx, my
+    dir = @player.hflip ? -1 : 1
+    speed = 300 / 60
+    dx = mx - @player.x
+    dy = my - @player.y
+    puts "new bullet #{dx} #{dy}"
+    len = Math.sqrt(dx**2 + dy**2)
+    dx /= len
+    dy /= len
+    @bullets << Bullet.new(args, @player.x + 13 * dx, @player.y + 13 * dy, speed * dx, speed * dy)
   end
 
   def update args
-    # handle inputs
+    # handle key input
     @player.left = args.inputs.left
     @player.right = args.inputs.right
     if args.inputs.up
@@ -25,7 +36,20 @@ class TestScreen < Screen
     if args.inputs.keyboard.key_down.one
       args.state.debug = !args.state.debug
     end
+
+    # handle mouse input
     (mx, my) = @cam.from_screen_space(args.inputs.mouse.x, args.inputs.mouse.y)
+    if args.inputs.mouse.button_left
+      if @player.fire
+        add_bullet args, mx, my
+      end
+    end
+
+    # update bullets
+    @bullets.each { |b| b.update @tiled_map.walls }
+    @bullets.reject! { |b|
+      b.remove 
+    }
 
     # cam follow player
     @cam.look_at @player.x, HEIGHT / 2, 0.1
@@ -40,6 +64,7 @@ class TestScreen < Screen
 
     @tiled_map.render args, @cam
     @player.render args, @cam
+    @bullets.each { |b| b.render args, @cam }
 
     # debug text
     args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 20, y: args.grid.h - 10, **WHITE }
