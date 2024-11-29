@@ -65,7 +65,7 @@ class Camera
       y: sy - sh / 2,
       w: sw,
       h: sh,
-      path: image
+      **image
     }
   end
 

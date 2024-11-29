@@ -4,6 +4,7 @@ class TestScreen < Screen
     super
 
     @bullets = []
+    @particles = []
 
     @player = Player.new
     @player.x = WIDTH / 2
@@ -16,17 +17,20 @@ class TestScreen < Screen
 
   private def add_bullet args, mx, my
     dir = @player.hflip ? -1 : 1
-    speed = 300 / 60
+    speed = 500 / 60
     dx = mx - @player.x
     dy = my - @player.y
     deg = (Math.atan2 dy, dx) * 180 / PI
     deg = (deg / 45).round * 45
-    dx = Math.cos(deg * PI / 180)
-    dy = Math.sin(deg * PI / 180)
-    len = Math.sqrt(dx**2 + dy**2)
+    dx = Math.cos deg * PI / 180
+    dy = Math.sin deg * PI / 180
+    len = Math.sqrt dx**2 + dy**2
     dx /= len
     dy /= len
-    @bullets << Bullet.new(args, @player.x + 13 * dx, @player.y + 13 * dy - 1, speed * dx, speed * dy, deg)
+    x = @player.x + 13 * dx
+    y = @player.y + 13 * dy - 1
+    @bullets << (Bullet.new args, x, y, speed * dx, speed * dy, deg)
+    @particles << (Particle.new "gunflash", x + dx, y + dy, 0, 0, 3, 2, true)
   end
 
   def update args
@@ -41,18 +45,20 @@ class TestScreen < Screen
     end
 
     # handle mouse input
-    (mx, my) = @cam.from_screen_space(args.inputs.mouse.x, args.inputs.mouse.y)
+    mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
     if args.inputs.mouse.button_left
       if @player.fire
         add_bullet args, mx, my
       end
     end
 
+    # update particles
+    @particles.each { |p| p.update }
+    @particles.reject! { |p| p.remove }
+
     # update bullets
     @bullets.each { |b| b.update @tiled_map.walls }
-    @bullets.reject! { |b|
-      b.remove 
-    }
+    @bullets.reject! { |b| b.remove }
 
     # cam follow player
     @cam.look_at @player.x, HEIGHT / 2, 0.1
@@ -68,6 +74,7 @@ class TestScreen < Screen
     @tiled_map.render args, @cam
     @player.render args, @cam
     @bullets.each { |b| b.render args, @cam }
+    @particles.each { |p| p.render args, @cam }
 
     # debug text
     args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 20, y: args.grid.h - 10, **WHITE }

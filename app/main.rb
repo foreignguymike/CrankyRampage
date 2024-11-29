@@ -5,9 +5,11 @@ require 'app/screen/screen'
 require 'app/screen/test_screen'
 require 'app/util/utils'
 require 'app/util/texture_atlas_manager'
+require 'app/util/animation'
 require 'app/entity/entity'
 require 'app/entity/player'
 require 'app/entity/bullet'
+require 'app/entity/particle'
 require 'app/tiled/tiled_map'
 
 def setup_game args

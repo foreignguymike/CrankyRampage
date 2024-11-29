@@ -6,7 +6,7 @@ class Player < Entity
   GRAVITY = 300 / 60 / 60
 	MAX_SPEED = 70 / 60
   MAX_FALL_SPEED = 200 / 60
-  JUMP = 160 / 60
+  JUMP = 150 / 60
 
   # input
   attr_accessor :left, :right
@@ -126,7 +126,7 @@ class Player < Entity
 
     # render collision box
     if args.state.debug
-      cam.render_box args, @x, @y, @cw, @ch, 255, 0, 0, 80
+      render_debug args, cam
     end
   end
 
