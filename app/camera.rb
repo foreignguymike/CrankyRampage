@@ -35,26 +35,41 @@ class Camera
     height * SCALE_Y
   end
 
-  def render objects
-    Array(objects).each do |obj|
-      screen_x, screen_y = to_screen_space obj.x, obj.y
-      screen_w = scale_w obj.w
-      screen_h = scale_h obj.h
+  def render args, objects
+    Array(objects).each { |obj|
+      sx, sy = to_screen_space obj.x, obj.y
+      sw = scale_w obj.w
+      sh = scale_h obj.h
       hide = obj.hide
       alpha = obj.a || 255
       if !hide
-        $args.outputs.sprites << {
-          x: screen_x,
-          y: screen_y,
-          w: screen_w,
-          h: screen_h,
+        args.outputs.sprites << {
+          x: sx - sw / 2,
+          y: sy - sh / 2,
+          w: sw,
+          h: sh,
           **obj.image,
-          anchor_x: 0.5,
-          anchor_y: 0.5,
           flip_horizontally: obj.hflip,
           a: alpha
         }
       end
-    end
+    }
+  end
+
+  def renderBox args, x, y, w, h, r, g, b, a
+    sx, sy = to_screen_space x, y
+    sw = scale_w w
+    sh = scale_h h
+    args.outputs.sprites << {
+      x: sx - sw / 2,
+      y: sy - sh / 2,
+      w: sw,
+      h: sh,
+      **(args.state.assets.find "pixel"),
+      r: r,
+      g: g,
+      b: b,
+      a: a
+    }
   end
 end

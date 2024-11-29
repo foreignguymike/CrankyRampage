@@ -21,10 +21,10 @@ class ScreenManager
     @screens.last
   end
 
-  def tick
+  def tick args
     if peek
-      peek.update
-      peek.render
+      peek.update args
+      peek.render args
     end
   end
 

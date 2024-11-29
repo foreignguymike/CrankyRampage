@@ -18,12 +18,12 @@ end
 def tick args
   setup_game args
 
-  Utils.clearScreen args, 200, 200, 255, 255
+  Utils.clear_screen args, 200, 200, 255, 255
 
   # tick screen
   args.outputs[:fbo].w = WIDTH
   args.outputs[:fbo].h = HEIGHT
-  args.state.sm.tick
+  args.state.sm.tick args
 
   # render fbo
   args.outputs.sprites << { x: 0, y: 0, w: args.grid.w / 2, h: args.grid.h, path: :fbo }

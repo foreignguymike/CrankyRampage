@@ -6,11 +6,11 @@ class Screen
     @cam = Camera.new
   end
   
-  def update
+  def update args
     raise NotImplementedError
   end
 
-  def render
+  def render args
     raise NotImplementedError
   end
 

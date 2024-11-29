@@ -1,27 +1,32 @@
 class TestScreen < Screen
 
   def initialize
-    @player = Player.new
-    @cam = Camera.new
+    super
 
+    @player = Player.new
     @player.x = WIDTH / 2
     @player.y = HEIGHT / 2
+
+    @walls = []
+    @walls << { x: WIDTH / 2, y: 8, w: 280, h: 16 }
   end
 
-  def update
+  def update args
     # handle inputs
-    @player.up = $args.inputs.up
-    @player.left = $args.inputs.left
-    @player.down = $args.inputs.down
-    @player.right = $args.inputs.right
-    (mx, my) = @cam.from_screen_space($inputs.mouse.x, $inputs.mouse.y)
+    @player.left = args.inputs.left
+    @player.right = args.inputs.right
+    if args.inputs.up
+      @player.jump
+    end
+    (mx, my) = @cam.from_screen_space(args.inputs.mouse.x, args.inputs.mouse.y)
     
     @player.look_at mx, my
-    @player.update
+    @player.update @walls
   end
 
-  def render
-    @player.render @cam
+  def render args
+    @walls.each { |w| @cam.renderBox args, w.x, w.y, w.w, w.h, 0, 0, 0, 255 }
+    @player.render args, @cam
   end
 
 end
