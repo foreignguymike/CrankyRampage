@@ -26,4 +26,8 @@ module Utils
     true
   end
 
+  def self.center_rect x, y, w, h
+    return { x: x + w / 2, y: y + h / 2, w: w, h: h }
+  end
+
 end

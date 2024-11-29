@@ -7,16 +7,23 @@ class Camera
   SCALE_Y = SCREEN_HEIGHT.to_f / HEIGHT
   
   attr_reader :x, :y
+
   def x=v
     @x = v - (SCREEN_WIDTH / 2) / SCALE_X
   end
+
   def y=v
-    @y = v
+    @y = v - (SCREEN_HEIGHT / 2) / SCALE_Y
   end
 
   def initialize
     @x = 0
     @y = 0
+  end
+
+  def look_at x, y, ease=1
+    @x += (x - (SCREEN_WIDTH / 2) / SCALE_X - @x) * ease
+    @y += (y - (SCREEN_HEIGHT / 2) / SCALE_Y - @y) * ease
   end
 
   def to_screen_space x, y

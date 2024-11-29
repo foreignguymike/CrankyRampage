@@ -63,6 +63,7 @@ class Player < Entity
 
     # check collision x
     @wc = walls.find { |w|
+      if w.platform then next end
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x + @dx, @y)
     }
     if @wc
@@ -76,6 +77,8 @@ class Player < Entity
 
     # check collision y
     @wc = walls.find { |w|
+      # check platform, should only collide if we are above the platform and dy < 0
+      if w.platform && (@dy >= 0 || @y + @dy - @ch / 2 < w.y - w.h / 2) then next end
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y + @dy)
     }
     @on_ground = false
@@ -113,7 +116,9 @@ class Player < Entity
     cam.render args, self
 
     # render legs
-    if @left || @right || @up || @down
+    if !@on_ground
+      set_image args, "playerjump"
+    elsif @left || @right || @up || @down
       index = 1.frame_index(8, 4, true) + 1
       if (@right && @hflip) || (@left && !@hflip)
         set_image args, "playerwalk#{9 - index}"
@@ -127,11 +132,6 @@ class Player < Entity
 
     # render collision box
     cam.renderBox args, @x, @y, @cw, @ch, 255, 0, 0, 80
-
-    # debug text
-    args.outputs.labels << { text: "x, y #{@x} #{@y}", x: 20, y: 60 }
-    args.outputs.labels << { text: "dx, dy #{@dx} #{@dy}", x: 20, y: 40 }
-    args.outputs.labels << { text: "collision: #{@wc}", x: 20, y: 20 }
   end
 
 end
