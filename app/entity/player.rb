@@ -129,7 +129,9 @@ class Player < Entity
     cam.render args, self
 
     # render collision box
-    cam.renderBox args, @x, @y, @cw, @ch, 255, 0, 0, 80
+    if args.state.debug
+      cam.render_box args, @x, @y, @cw, @ch, 255, 0, 0, 80
+    end
   end
 
 end

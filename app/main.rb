@@ -10,6 +10,7 @@ require 'app/entity/player'
 
 def setup_game args
   return if Kernel.tick_count != 0
+  args.state.debug = false
   args.state.assets ||= TextureAtlasManager.new "assets/pack.atlas", "assets/pack.png"
   args.state.sm = ScreenManager.new
   args.state.sm.push TestScreen.new
@@ -17,8 +18,6 @@ end
 
 def tick args
   setup_game args
-
-  Utils.clear_screen args, 200, 200, 255, 255
 
   # tick screen
   args.outputs[:fbo].w = WIDTH

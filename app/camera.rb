@@ -39,7 +39,7 @@ class Camera
       sx, sy = to_screen_space obj.x, obj.y
       sw = scale_w obj.w
       sh = scale_h obj.h
-      hide = obj.hide
+      hide = obj.hide || false
       alpha = obj.a || 255
       if !hide
         args.outputs.sprites << {
@@ -55,7 +55,36 @@ class Camera
     }
   end
 
-  def renderBox args, x, y, w, h, r, g, b, a
+  def render_image args, image, x, y, w, h
+    sx, sy = to_screen_space x, y
+    sw = scale_w w
+    sh = scale_h h
+    args.outputs.sprites << {
+      x: sx - sw / 2,
+      y: sy - sh / 2,
+      w: sw,
+      h: sh,
+      path: image
+    }
+  end
+
+  def render_tile args, tileset, row, col, size, tile_row, tile_col, e
+    sx, sy = to_screen_space col * size, row * size
+    ss = scale_w size
+    args.outputs.sprites << {
+      x: sx,
+      y: sy,
+      w: ss,
+      h: ss,
+      path: tileset,
+      tile_x: tile_col * size,
+      tile_y: tile_row * size,
+      tile_w: size,
+      tile_h: size
+    }
+  end
+
+  def render_box args, x, y, w, h, r, g, b, a
     sx, sy = to_screen_space x, y
     sw = scale_w w
     sh = scale_h h

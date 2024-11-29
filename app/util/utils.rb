@@ -30,4 +30,12 @@ module Utils
     return { x: x + w / 2, y: y + h / 2, w: w, h: h }
   end
 
+  def self.parse_2d_array input
+    return input
+      .split("\n")
+      .map { |line|
+        line.split(",").map(&:to_i)
+      }
+  end
+
 end
