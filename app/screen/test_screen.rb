@@ -15,6 +15,9 @@ class TestScreen < Screen
     @cam.look_at @player.x, HEIGHT / 2
 
     @tiled_map = TiledMap.new "assets/testmap.tmx"
+
+    @cursor = Cursor.new
+    $gtk.hide_cursor
   end
 
   private def add_bullet args, mx, my
@@ -84,6 +87,11 @@ class TestScreen < Screen
     # update player
     @player.look_at mx, my
     @player.update @tiled_map.walls
+
+    # update cursor
+    @cursor.x = mx
+    @cursor.y = my
+    @cursor.update
   end
 
   def render args
@@ -99,6 +107,8 @@ class TestScreen < Screen
     @player.render args, @cam
     @bullets.each { |b| b.render args, @cam }
     @particles.each { |p| p.render args, @cam }
+
+    @cursor.render args, @cam
 
     # debug text
     args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 20, y: args.grid.h - 10, **BLACK }
