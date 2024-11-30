@@ -1,7 +1,5 @@
 class Bullet < Entity
 
-  attr_accessor :remove
-
   def initialize args, x = 0, y = 0, dx = 0, dy = 0, deg = 0
     super()
     @x = x
@@ -34,9 +32,7 @@ class Bullet < Entity
 
   def render args, cam
     cam.render args, self
-    if args.state.debug
-      render_debug args, cam
-    end
+    render_debug args, cam if args.state.debug
   end
 
 end

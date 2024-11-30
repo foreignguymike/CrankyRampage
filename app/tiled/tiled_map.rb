@@ -1,5 +1,6 @@
 class TiledMap
 
+  attr_accessor :map_width, :map_height
   attr_accessor :walls
 
   def initialize tmx_file
@@ -17,6 +18,7 @@ class TiledMap
         @map = Utils.parse_2d_array map
         @map_cols = c[:attributes]["width"].to_i
         @map_rows = c[:attributes]["height"].to_i
+        @map_width = @map_cols * @tile_size
         @map_height = @map_rows * @tile_size
       when 'objectgroup'
         name = c[:attributes]["name"]

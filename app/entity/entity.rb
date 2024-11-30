@@ -18,10 +18,12 @@ class Entity
   attr_reader :cxo, :cyo, :cw, :ch
 
   # render
-  attr_reader :remove, :a, :render_deg, :image, :hide, :hflip, :flash
+  attr_reader :a, :render_deg, :image, :hide, :hflip, :flash
+  attr_accessor :remove
 	
 	def initialize
     @x = @y = @dx = @dy = 0
+    @friction = FRICTION
     @a = 255
     @cxo = @cyo = @cw = @ch = 0
     @render_deg = 0
@@ -36,6 +38,12 @@ class Entity
   def set_image args, region
     @image = args.state.assets.find region
     @w = @image.tile_w
+    @h = @image.tile_h
+  end
+
+  def set_image_index args, region, index, width
+    @image = args.state.assets.find_index region, index, width
+    @w = width
     @h = @image.tile_h
   end
 
@@ -55,17 +63,18 @@ class Entity
     end
   end
 
-  def check_collision walls
+  def apply_friction
     # input
-    if @left then @dx = (@dx - ACCEL).clamp(-@max_speed, 0) end
-    if @right then @dx = (@dx + ACCEL).clamp(0, @max_speed) end
-    
-    # gravity
-    @dy = (@dy - GRAVITY).clamp(-MAX_FALL_SPEED, 1000)
-    
-    # friction
     if !@left && @dx < 0 then @dx = (@dx + FRICTION).clamp(@dx, 0) end
     if !@right && @dx > 0 then @dx = (@dx - FRICTION).clamp(0, @dx) end
+  end
+
+  def check_collision walls, has_friction = true
+    # gravity
+    @dy = (@dy - GRAVITY).clamp(-MAX_FALL_SPEED, 1000)
+
+    # friction
+    apply_friction if has_friction
 
     # check collision x
     @wx = walls.find { |w|

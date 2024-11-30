@@ -8,6 +8,7 @@ require 'app/util/texture_atlas_manager'
 require 'app/util/animation'
 require 'app/entity/entity'
 require 'app/entity/spikewheel'
+require 'app/entity/gem'
 require 'app/entity/cursor'
 require 'app/entity/player'
 require 'app/entity/bullet'
@@ -19,7 +20,7 @@ def setup_game args
   args.state.debug = false
   args.state.assets ||= TextureAtlasManager.new "assets/pack.atlas", "assets/pack.png"
   args.state.sm = ScreenManager.new
-  args.state.sm.push TestScreen.new
+  args.state.sm.push TestScreen.new args
 end
 
 def tick args

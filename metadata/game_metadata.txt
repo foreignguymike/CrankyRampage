@@ -1,8 +1,8 @@
 # Remove the pound sign and leading space for the properties below before publishing your game.
 devid=foreignguymike
 devtitle=Mike S
-gameid=twilightrun
-gametitle=Twilight Run
+gameid=crankyrampage
+gametitle=Cranky Rampage
 version=1.0
 icon=metadata/icon.png
 

@@ -8,22 +8,23 @@ class SpikeWheel < Entity
     @y = y
     @max_speed = 30 / 60
     @cw = @ch = 15
+    @dx = -@max_speed
     @left = true
     @health = 5
   end
 
-  def update walls, bullets
+  def update args, walls, bullets
     if @wx != nil
-      @left = !@left
-      @right = !@right
+      @max_speed = -@max_speed
+      @dx = @max_speed
     end
-    @render_deg += @left ? 3 : -3
-    check_collision walls
+    @render_deg += @dx < 0 ? 3 : -3
+    check_collision walls, false
     @x += @dx
     @y += @dy
     
     bullets.each { |b|
-      if Utils.overlaps? crect, (b.crect b.x, b.y)
+      if Utils.overlaps? b.crect, crect
         b.remove = true
         @health -= 1
         @flash = true
@@ -31,6 +32,7 @@ class SpikeWheel < Entity
         if @health <= 0
           @remove = true
         end
+        args.audio[:esfx] = { input: "sounds/enemyhit.wav", gain: 1, looping: false }
       end
     }
     @flash_time -= 1
@@ -43,10 +45,7 @@ class SpikeWheel < Entity
     set_image args, "spikewheel"
     cam.render args, self
 
-
-    if args.state.debug
-      render_debug args, cam
-    end
+    render_debug args, cam if args.state.debug
   end
 
 end

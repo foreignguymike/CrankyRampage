@@ -1,14 +1,21 @@
 class TestScreen < Screen
 
-  def initialize
-    super
+  def initialize args
+    super()
+
+    @random = Random.new
 
     @bullets = []
     @particles = []
     @enemies = []
+    @collectables = []
 
     @enemies << (SpikeWheel.new 350, HEIGHT / 2)
     @enemies << (SpikeWheel.new 550, HEIGHT / 2)
+    @enemies << (SpikeWheel.new 880, 32)
+    @enemies << (SpikeWheel.new 1200, 32)
+    @enemies << (SpikeWheel.new 1350, 32)
+    @enemies << (SpikeWheel.new 1500, 32)
 
     @player = Player.new
     @player.x = WIDTH / 2
@@ -22,6 +29,8 @@ class TestScreen < Screen
 
     @cursor = Cursor.new
     $gtk.hide_cursor
+
+    # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
   end
 
   private def add_bullet args, mx, my
@@ -39,11 +48,11 @@ class TestScreen < Screen
     x = @player.x + 13 * dx
     y = @player.y + 13 * dy - 1
     @bullets << (Bullet.new args, x, y, speed * dx, speed * dy, deg)
-    @particles << (Particle.new "gunflash", x + dx, y + dy, 0, 0, 3, 2, true)
+    @particles << (Particle.new "gunflash", x + dx, y + dy, 7, 7, 0, 0, 3, 2, true)
   end
 
   private def update_cam mx, my
-    @cam.look_at [@player.x, WIDTH / 2].max, HEIGHT / 2, 0.07
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2, 0.07
     # follow mouse
     # midx = (@player.x + mx) / 2
     # midy = (@player.y + my) / 2
@@ -55,7 +64,7 @@ class TestScreen < Screen
     #   midx = @player.x + dx * scale
     #   midy = @player.y + dy * scale
     # end
-    # @cam.look_at midx, HEIGHT / 2, 0.1
+    # @cam.look_at [midx, WIDTH / 2].max, HEIGHT / 2, 0.07
   end
 
   def update args
@@ -73,34 +82,53 @@ class TestScreen < Screen
     mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
     if args.inputs.mouse.button_left
       if @player.fire
+        args.audio[:sfx] = { input: "sounds/shoot.wav", gain: 0.2, looping: false }
         add_bullet args, mx, my
       end
     end
 
     # update enemies
-    @enemies.each { |e| e.update @tiled_map.walls, @bullets }
     @enemies.reject! { |e| 
+      e.update args, @tiled_map.walls, @bullets
       if e.health <= 0
-        @particles << (Particle.new "explosion", e.x + rand(20) - 10, e.y + rand(10) - 5, 0, 0, 8, 3, true)
-        @particles << (Particle.new "explosion", e.x + rand(20) - 10, e.y - rand(10) - 5, 0, 0, 8, 5, true)
+        @particles << (Particle.new "explosion", e.x, e.y + 7, 32, 32, 0, 0, 8, 3, true)
+        @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
+        @particles << (Particle.new "explosion", e.x + 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
+        args.audio[:esfx] = { input: "sounds/explode.wav", gain: 0.4, looping: false }
+        4.times {
+          rad = rand * 2 * PI / 4 + PI / 4
+          dx = Math.cos rad
+          dy = Math.sin rad
+          @collectables << (Gem.new "gem", e.x, e.y, 12, 12, dx * 100 / 60, dy * 150 / 60, 24, 2)
+        }
       end
       e.remove 
     }
 
+    # update collectables
+    @collectables.reject! { |c|
+      c.update @tiled_map.walls
+      c.remove 
+    }
+
     # update particles
-    @particles.each { |p| p.update }
-    @particles.reject! { |p| p.remove }
+    @particles.reject! { |p|
+      p.update
+      p.remove
+    }
 
     # update bullets
-    @bullets.each { |b| b.update @tiled_map.walls }
-    @bullets.reject! { |b| b.remove }
+    @bullets.reject! { |b|
+      b.update @tiled_map.walls
+      b.remove
+    }
 
     # cam follow player
     update_cam mx, my
 
     # update player
     @player.look_at mx, my
-    @player.update @tiled_map.walls
+    @player.update args, @tiled_map.walls, @enemies, @collectables
 
     # update cursor
     @cursor.x = mx
@@ -120,6 +148,7 @@ class TestScreen < Screen
     @tiled_map.render args, @cam
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }
+    @collectables.each { |c| c.render args, @cam }
     @bullets.each { |b| b.render args, @cam }
     @particles.each { |p| p.render args, @cam }
 
@@ -129,9 +158,7 @@ class TestScreen < Screen
     args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 10, y: args.grid.h - 10, **BLACK }
     args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 10, y: args.grid.h - 30, **BLACK }
     args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 50, **BLACK }
-    args.outputs.labels << { text: "player ground #{@player.on_ground}", x: 10, y: args.grid.h - 70, **BLACK }
-    args.outputs.labels << { text: "player on platform #{@player.wg&.platform || false}", x: 10, y: args.grid.h - 90, **BLACK }
-    args.outputs.labels << { text: "entity count #{@enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 110, **BLACK }
+    args.outputs.labels << { text: "entity count #{@collectables.size + @enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 70, **BLACK }
     args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **BLACK }
   end
 

@@ -38,4 +38,15 @@ module Utils
       }
   end
 
+  def self.rand_np min, max
+    r = rand(max - min) + min
+    r = rand(2).zero? ? -r : r
+    puts "rand_np -> #{r}"
+    return r
+  end
+
+  def self.randf max
+    
+  end
+
 end
