@@ -5,6 +5,10 @@ class TestScreen < Screen
 
     @bullets = []
     @particles = []
+    @enemies = []
+
+    @enemies << (SpikeWheel.new 350, HEIGHT / 2)
+    @enemies << (SpikeWheel.new 550, HEIGHT / 2)
 
     @player = Player.new
     @player.x = WIDTH / 2
@@ -73,6 +77,16 @@ class TestScreen < Screen
       end
     end
 
+    # update enemies
+    @enemies.each { |e| e.update @tiled_map.walls, @bullets }
+    @enemies.reject! { |e| 
+      if e.health <= 0
+        @particles << (Particle.new "explosion", e.x + rand(20) - 10, e.y + rand(10) - 5, 0, 0, 8, 3, true)
+        @particles << (Particle.new "explosion", e.x + rand(20) - 10, e.y - rand(10) - 5, 0, 0, 8, 5, true)
+      end
+      e.remove 
+    }
+
     # update particles
     @particles.each { |p| p.update }
     @particles.reject! { |p| p.remove }
@@ -105,17 +119,20 @@ class TestScreen < Screen
 
     @tiled_map.render args, @cam
     @player.render args, @cam
+    @enemies.each { |e| e.render args, @cam }
     @bullets.each { |b| b.render args, @cam }
     @particles.each { |p| p.render args, @cam }
 
     @cursor.render args, @cam
 
     # debug text
-    args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 20, y: args.grid.h - 10, **BLACK }
-    args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 20, y: args.grid.h - 30, **BLACK }
-    args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 20, y: args.grid.h - 50, **BLACK }
-    args.outputs.labels << { text: "player ground #{@player.on_ground}", x: 20, y: args.grid.h - 70, **BLACK }
-    args.outputs.labels << { text: "player on platform #{@player.wg&.platform || false}", x: 20, y: args.grid.h - 90, **BLACK }
+    args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 10, y: args.grid.h - 10, **BLACK }
+    args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 10, y: args.grid.h - 30, **BLACK }
+    args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 50, **BLACK }
+    args.outputs.labels << { text: "player ground #{@player.on_ground}", x: 10, y: args.grid.h - 70, **BLACK }
+    args.outputs.labels << { text: "player on platform #{@player.wg&.platform || false}", x: 10, y: args.grid.h - 90, **BLACK }
+    args.outputs.labels << { text: "entity count #{@enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 110, **BLACK }
+    args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **BLACK }
   end
 
 end

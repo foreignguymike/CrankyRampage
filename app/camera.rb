@@ -50,7 +50,8 @@ class Camera
           **obj.image,
           flip_horizontally: obj.hflip,
           a: alpha,
-          angle: obj.render_deg
+          angle: obj.render_deg,
+          blendmode_enum: obj.flash ? 2 : 1
         }
       end
     }
@@ -73,8 +74,8 @@ class Camera
     sx, sy = to_screen_space col * size, row * size
     ss = scale_w size
     args.outputs.sprites << {
-      x: sx,
-      y: sy,
+      x: sx.round,
+      y: sy.round,
       w: ss,
       h: ss,
       path: tileset,
@@ -95,6 +96,22 @@ class Camera
       w: sw,
       h: sh,
       **(args.state.assets.find "pixel"),
+      r: r,
+      g: g,
+      b: b,
+      a: a
+    }
+  end
+
+  def render_solid args, x, y, w, h, r, g, b, a
+    sx, sy = to_screen_space x, y
+    sw = scale_w w
+    sh = scale_h h
+    args.outputs.solids << {
+      x: sx - sw / 2,
+      y: sy - sh / 2,
+      w: sw,
+      h: sh,
       r: r,
       g: g,
       b: b,

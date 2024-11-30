@@ -10,6 +10,7 @@ class Player < Entity
     @mx = @my = 0
     @on_ground = false
     @fire_time = 10
+    @max_speed = 90 / 60
   end
 
   def look_at mx, my
@@ -30,8 +31,8 @@ class Player < Entity
     check_collision walls
 
     # move
-    @x += dx
-    @y += dy
+    @x += @dx
+    @y += @dy
 
     # shooting
     @fire_time += 1
