@@ -95,6 +95,8 @@ class Entity
           @on_ground = true
         end
         @dy = 0
+      else
+        @wg = nil
       end
   end
 
