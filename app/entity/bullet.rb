@@ -1,6 +1,6 @@
 class Bullet < Entity
 
-  def initialize args, x = 0, y = 0, dx = 0, dy = 0, deg = 0
+  def initialize args, path, x = 0, y = 0, dx = 0, dy = 0, deg = 0
     super()
     @x = x
     @y = y
@@ -9,7 +9,7 @@ class Bullet < Entity
     @render_deg = deg
     @time = 0
     @cw = @ch = 10
-    set_image args, "machinegun"
+    set_image args, path
   end
 
   def update walls

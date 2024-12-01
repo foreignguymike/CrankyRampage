@@ -40,19 +40,33 @@ class Gem < Entity
     @animation = Animation.new @count, @interval
   end
 
+  def follow player
+    @player = player
+  end
+
   def update walls
-    if @wy == nil
-      @jump_vel = @dy.abs
-    end
-    if @wx != nil
-      @max_speed = -@max_speed
-      @dx = @max_speed
-    end
-    if @wy != nil && @wy.y < @y
-      @max_speed *= 0.6
-      @jump_vel *= 0.6
-      @dx = @max_speed
-      @dy = @jump_vel
+    if @player == nil
+      if @wy == nil
+        @jump_vel = @dy.abs
+      end
+      if @wx != nil
+        @max_speed = -@max_speed
+        @dx = @max_speed
+      end
+      if @wy != nil && @wy.y < @y
+        @max_speed *= 0.6
+        @jump_vel *= 0.6
+        @dx = @max_speed
+        @dy = @jump_vel
+      end
+    else
+      dx = @player.x - @x
+      dy = @player.y - @y
+      len = Math.sqrt dx**2 + dy**2
+      nx = dx / len
+      ny = dy / len
+      @dx = nx * 200 / 60
+      @dy = ny * 200 / 60
     end
 
     check_collision walls, false

@@ -18,6 +18,7 @@ class Player < Entity
     @stagger = false
     @mx = @my = 0
     @money = 0
+    @magnet_range = 35
   end
 
   def set_gun gun
@@ -73,6 +74,9 @@ class Player < Entity
         @money += c.value
         args.audio[:csfx] = { input: "sounds/gem.wav", gain: 0.7, looping: false }
         c.remove = true
+      end
+      if (@x - c.x).abs < @magnet_range && (@y - c.y).abs < @magnet_range
+        c.follow self
       end
     }
 

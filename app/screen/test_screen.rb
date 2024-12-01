@@ -91,6 +91,8 @@ class TestScreen < Screen
       @player.set_gun Gun::Triplet.new add_bullet
     elsif args.inputs.keyboard.key_down.four
       @player.set_gun Gun::Spreader.new add_bullet
+    elsif args.inputs.keyboard.key_down.five
+      @player.set_gun Gun::Beam.new add_bullet
     end
 
     # handle mouse input
@@ -105,11 +107,11 @@ class TestScreen < Screen
         @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x + 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
         args.audio[:esfx] = { input: "sounds/explode.wav", gain: 0.4, looping: false }
-        ["amber", "amber", "emerald"].each { |n|
+        e.gems.each { |c|
           rad = rand * 2 * PI / 4 + PI / 4
           dx = Math.cos rad
           dy = Math.sin rad
-          @collectables << (Gem.new n, e.x, e.y, dx * 100 / 60, dy * 150 / 60)
+          @collectables << (Gem.new c, e.x, e.y, dx * 100 / 60, dy * 150 / 60)
         }
       end
       e.remove 
@@ -172,7 +174,6 @@ class TestScreen < Screen
       args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 10, y: args.grid.h - 220, **BLACK }
       args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 240, **BLACK }
       args.outputs.labels << { text: "entity count #{@collectables.size + @enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 260, **BLACK }
-      args.outputs.labels << { text: "player money #{@player.money}", x: 10, y: args.grid.h - 280, **BLACK }
       args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **BLACK }
     end
   end

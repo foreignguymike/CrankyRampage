@@ -1,6 +1,6 @@
 class SpikeWheel < Entity
 
-  attr_reader :health
+  attr_reader :health, :gems
 
   def initialize x, y
     super()
@@ -11,6 +11,7 @@ class SpikeWheel < Entity
     @dx = -@max_speed
     @left = true
     @health = 5
+    @gems = ["amber", "amber", "emerald"]
   end
 
   def update args, walls, bullets

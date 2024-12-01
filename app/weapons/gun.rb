@@ -1,5 +1,5 @@
 class Gun
-  def initialize add_bullet, fire_interval, burst_interval = 0, burst_count = 1, spread: 0, num_bullets: 1, bullet_angle: 0
+  def initialize add_bullet, fire_interval, burst_interval = 0, burst_count = 1, bullet: "pistol", spread: 0, num_bullets: 1, bullet_angle: 0, speed: 500 / 60
     @add_bullet = add_bullet
     @fire_interval = fire_interval
     @burst_interval = burst_interval
@@ -10,6 +10,8 @@ class Gun
     @spread = spread
     @num_bullets = num_bullets
     @bullet_angle = bullet_angle
+    @bullet = bullet
+    @speed = speed
 
     # sanity check
     raise ArgumentError, "fire_interval must be greater than burst_interval * burst_count" if fire_interval <= burst_interval * burst_count
@@ -42,7 +44,6 @@ class Gun
   end
 
   private def create_bullets args, x, y, mx, my, offset
-    speed = 500 / 60
     dx = mx - x
     dy = my - y
     deg = (Math.atan2 dy, dx) * 180 / PI
@@ -58,7 +59,7 @@ class Gun
       dy /= len
       x = x + offset * dx
       y = y + offset * dy - 1
-      @add_bullet.call args, (Bullet.new args, x, y, speed * dx, speed * dy, tdeg)
+      @add_bullet.call args, (Bullet.new args, @bullet, x, y, @speed * dx, @speed * dy, tdeg)
       deg += angle_per_bullet
     }
   end
@@ -84,6 +85,12 @@ end
 
 class Spreader < Gun
   def initialize add_bullet
-    super add_bullet, 30, num_bullets: 5, bullet_angle: 30
+    super add_bullet, 30, num_bullets: 5, bullet_angle: 30, bullet: "wave"
+  end
+end
+
+class Beam < Gun
+  def initialize add_bullet
+    super add_bullet, 1, bullet: "beam", speed: 1000 / 60
   end
 end
