@@ -73,6 +73,7 @@ class TiledMap
     (start_row..end_row).each { |r|
       (start_col..end_col).each { |c|
         e = @map[r][c]
+        next if e == 0
         cam.render_tile args, @tileset_image_file, r, c, @tile_size, ((e - 1) / @tile_cols).to_i, (e - 1) % @tile_cols, e
       }
     }

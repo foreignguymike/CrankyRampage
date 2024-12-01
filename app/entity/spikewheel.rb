@@ -10,7 +10,7 @@ class SpikeWheel < Entity
     @cw = @ch = 15
     @dx = -@max_speed
     @left = true
-    @health = 5
+    @max_health = @health = 5
     @gems = ["amber", "amber", "emerald"]
   end
 
@@ -25,6 +25,7 @@ class SpikeWheel < Entity
     @y += @dy
     
     bullets.each { |b|
+      next if b.remove
       if Utils.overlaps? b.crect, crect
         b.remove = true
         @health -= 1

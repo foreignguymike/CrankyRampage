@@ -58,7 +58,7 @@ class TestScreen < Screen
   end
 
   private def update_cam mx, my
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.07
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
     # follow mouse
     # midx = (@player.x + mx) / 2
     # midy = (@player.y + my) / 2
@@ -75,6 +75,9 @@ class TestScreen < Screen
 
   def update args
     # handle key input
+    if args.inputs.keyboard.key_down.r || @player.health <= 0
+      args.state.sm.replace TestScreen.new args
+    end
     @player.left = args.inputs.left
     @player.right = args.inputs.right
     if args.inputs.down
@@ -83,16 +86,18 @@ class TestScreen < Screen
     if args.inputs.up
       @player.jump
     end
-    if args.inputs.keyboard.key_down.one
-      @player.set_gun Gun::Pistol.new add_bullet
-    elsif args.inputs.keyboard.key_down.two
-      @player.set_gun Gun::MachineGun.new add_bullet
-    elsif args.inputs.keyboard.key_down.three
-      @player.set_gun Gun::Triplet.new add_bullet
-    elsif args.inputs.keyboard.key_down.four
-      @player.set_gun Gun::Spreader.new add_bullet
-    elsif args.inputs.keyboard.key_down.five
-      @player.set_gun Gun::Beam.new add_bullet
+    if args.state.debug
+      if args.inputs.keyboard.key_down.one
+        @player.set_gun Gun::Pistol.new add_bullet
+      elsif args.inputs.keyboard.key_down.two
+        @player.set_gun Gun::MachineGun.new add_bullet
+      elsif args.inputs.keyboard.key_down.three
+        @player.set_gun Gun::Triplet.new add_bullet
+      elsif args.inputs.keyboard.key_down.four
+        @player.set_gun Gun::Spreader.new add_bullet
+      elsif args.inputs.keyboard.key_down.five
+        @player.set_gun Gun::Beam.new add_bullet
+      end
     end
 
     # handle mouse input

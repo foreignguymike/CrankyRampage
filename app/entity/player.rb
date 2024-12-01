@@ -19,6 +19,9 @@ class Player < Entity
     @mx = @my = 0
     @money = 0
     @magnet_range = 35
+    @max_health = @health = 3
+    @hflip = false
+    @rad = 0
   end
 
   def set_gun gun
@@ -63,6 +66,7 @@ class Player < Entity
           @dx = @hflip ? 60 / 60 : -60 / 60
           @dy = 80 / 60
           @stagger = true
+          @health -= 1
           args.audio[:sfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
         end
       }

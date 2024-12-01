@@ -31,9 +31,6 @@ def tick args
   if args.inputs.keyboard.key_down.f1
     args.state.debug = !args.state.debug
   end
-  if args.inputs.keyboard.key_down.r
-    setup_game args, true
-  end
 
   # tick screen
   args.state.sm.tick args

@@ -33,7 +33,7 @@ class Gem < Entity
     @value = case path
     when "amber" then 1
     when "emerald" then 3
-    when "sapphire" then 3
+    when "sapphire" then 5
     else 0
     end
 

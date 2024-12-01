@@ -2,7 +2,7 @@ class Entity
   ACCEL = 500 / 60 / 60
 	FRICTION = 500 / 60 / 60
   GRAVITY = 500 / 60 / 60
-  MAX_FALL_SPEED = 200 / 60
+  MAX_FALL_SPEED = 400 / 60
   JUMP = 200 / 60
 
   # input
@@ -16,6 +16,9 @@ class Entity
 
   # collision
   attr_reader :cxo, :cyo, :cw, :ch
+
+  # game
+  attr_reader :health, :max_health
 
   # render
   attr_reader :a, :render_deg, :image, :hide, :hflip, :flash
@@ -35,6 +38,7 @@ class Entity
     @jump_speed = JUMP
     @flash = false
     @flash_time = 0
+    @health = 0
 	end
 
   def set_image args, region
