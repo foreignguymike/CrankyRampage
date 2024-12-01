@@ -1,9 +1,9 @@
 class Entity
-  ACCEL = 300 / 60 / 60
-	FRICTION = 300 / 60 / 60
+  ACCEL = 500 / 60 / 60
+	FRICTION = 500 / 60 / 60
   GRAVITY = 300 / 60 / 60
   MAX_FALL_SPEED = 200 / 60
-  JUMP = 150 / 60
+  JUMP = 200 / 60
 
   # input
   attr_accessor :left, :right, :down
@@ -24,6 +24,7 @@ class Entity
 	def initialize
     @x = @y = @dx = @dy = 0
     @friction = FRICTION
+    @gravity = GRAVITY
     @a = 255
     @cxo = @cyo = @cw = @ch = 0
     @render_deg = 0
@@ -71,7 +72,7 @@ class Entity
 
   def check_collision walls, has_friction = true
     # gravity
-    @dy = (@dy - GRAVITY).clamp(-MAX_FALL_SPEED, 1000)
+    @dy = (@dy - @gravity).clamp(-MAX_FALL_SPEED, 1000)
 
     # friction
     apply_friction if has_friction

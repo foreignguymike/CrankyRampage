@@ -33,6 +33,7 @@ module Utils
   def self.parse_2d_array input
     return input
       .split("\n")
+      .reverse
       .map { |line|
         line.split(",").map(&:to_i)
       }
@@ -41,7 +42,6 @@ module Utils
   def self.rand_np min, max
     r = rand(max - min) + min
     r = rand(2).zero? ? -r : r
-    puts "rand_np -> #{r}"
     return r
   end
 

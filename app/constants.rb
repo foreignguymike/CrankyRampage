@@ -1,5 +1,7 @@
 TITLE = "Cranky Rampage"
 
+# WIDTH = 640
+# HEIGHT = 360
 WIDTH = 320
 HEIGHT = 180
 

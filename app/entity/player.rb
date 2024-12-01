@@ -12,7 +12,7 @@ class Player < Entity
     @mx = @my = 0
     @on_ground = false
     @fire_time = 0
-    @max_speed = 90 / 60
+    @max_speed = 120 / 60
     @hit_time = 0
     @stagger = false
   end

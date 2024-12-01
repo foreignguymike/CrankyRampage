@@ -10,27 +10,40 @@ class TestScreen < Screen
     @enemies = []
     @collectables = []
 
-    @enemies << (SpikeWheel.new 350, HEIGHT / 2)
-    @enemies << (SpikeWheel.new 550, HEIGHT / 2)
-    @enemies << (SpikeWheel.new 880, 32)
-    @enemies << (SpikeWheel.new 1200, 32)
-    @enemies << (SpikeWheel.new 1350, 32)
-    @enemies << (SpikeWheel.new 1500, 32)
+    # @enemies << (SpikeWheel.new 350, 50)
+    # @enemies << (SpikeWheel.new 550, 50)
+    # @enemies << (SpikeWheel.new 880, 32)
+    # @enemies << (SpikeWheel.new 1200, 32)
+    # @enemies << (SpikeWheel.new 1350, 32)
+    # @enemies << (SpikeWheel.new 1500, 32)
+
+    @tiled_map = TiledMap.new "assets/testmap.tmx"
 
     @player = Player.new
-    @player.x = WIDTH / 2
-    @player.y = HEIGHT / 2
+    @player.x = @tiled_map.p.x
+    @player.y = @tiled_map.p.y
+
+    parse_map
 
     @cloudx = 0
 
-    @cam.look_at @player.x, HEIGHT / 2
-
-    @tiled_map = TiledMap.new "assets/testmap.tmx"
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2
 
     @cursor = Cursor.new
     $gtk.hide_cursor
 
     # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
+  end
+
+  private def parse_map
+    @tiled_map.entities.each { |e|
+      case e.name
+      when "gem"
+        @collectables << (Gem.new "gem", e.x, e.y, 12, 12, 0, 0, 24, 2)
+      when "spikewheel"
+        @enemies << (SpikeWheel.new e.x, e.y)
+      end
+    }
   end
 
   private def add_bullet args, mx, my
@@ -39,9 +52,9 @@ class TestScreen < Screen
     dx = mx - @player.x
     dy = my - @player.y
     deg = (Math.atan2 dy, dx) * 180 / PI
-    deg = (deg / 45).round * 45
-    dx = Math.cos deg * PI / 180
-    dy = Math.sin deg * PI / 180
+    # deg = (deg / 45).round * 45
+    # dx = Math.cos deg * PI / 180
+    # dy = Math.sin deg * PI / 180
     len = Math.sqrt dx**2 + dy**2
     dx /= len
     dy /= len
@@ -52,7 +65,7 @@ class TestScreen < Screen
   end
 
   private def update_cam mx, my
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2, 0.07
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.07
     # follow mouse
     # midx = (@player.x + mx) / 2
     # midy = (@player.y + my) / 2

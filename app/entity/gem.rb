@@ -11,6 +11,7 @@ class Gem < Entity
     @dy = dy
     @count = count
     @interval = interval
+    @gravity = 0 if dy == 0
     @friction = 0
     @cw = @ch = 12
 

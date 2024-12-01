@@ -1,10 +1,14 @@
 class TiledMap
 
-  attr_accessor :map_width, :map_height
-  attr_accessor :walls
+  attr_reader :map_width, :map_height
+
+  attr_reader :walls
+  attr_reader :p
+  attr_reader :entities
 
   def initialize tmx_file
     @walls = []
+    @entities = []
 
     tmx_dir = File.dirname tmx_file
 
@@ -13,24 +17,38 @@ class TiledMap
 
     data[:children].each { |c|
       case c[:name]
-      when 'layer'
+      when "layer"
         map = c[:children].first[:children].first[:data]
         @map = Utils.parse_2d_array map
         @map_cols = c[:attributes]["width"].to_i
         @map_rows = c[:attributes]["height"].to_i
         @map_width = @map_cols * @tile_size
         @map_height = @map_rows * @tile_size
-      when 'objectgroup'
+      when "objectgroup"
+        puts "found objectgroup #{c}"
         name = c[:attributes]["name"]
-        c[:children].each { |wall|
-          w = wall[:attributes]
-          x = w["x"].to_i
-          y = w["y"].to_i
-          width = w["width"].to_i
-          height = w["height"].to_i
-          @walls << { **(Utils.center_rect x, @map_height - y - height, width, height), platform: name == "platforms" }
-        }
-      when 'tileset'
+        case name
+        when "walls", "platforms"
+          c[:children].each { |wall|
+            w = wall[:attributes]
+            x = w["x"].to_i
+            y = w["y"].to_i
+            width = w["width"].to_i
+            height = w["height"].to_i
+            @walls << { **(Utils.center_rect x, @map_height - y - height, width, height), platform: name == "platforms" }
+          }
+        when "entities"
+          entities = c[:children].each { |e|
+            attrs = e[:attributes]
+            case attrs["name"]
+            when "player"
+              @p = { x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
+            when "gem", "spikewheel"
+              @entities << { name: attrs["name"], x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
+            end
+          }
+        end
+      when "tileset"
         tileset_source_file = c[:attributes]["source"]
         tsx = $gtk.parse_xml_file File.join tmx_dir, tileset_source_file
 
@@ -46,13 +64,21 @@ class TiledMap
   end
 
   def render args, cam
-    @map.each_with_index { |row, r|
-      row.each_with_index { |e, c|
-        # next if e == 0
-        cam.render_tile args, @tileset_image_file, @map_rows - 1 - r, c, @tile_size, ((e - 1) / @tile_cols).to_i, (e - 1) % @tile_cols, e
+    # render tiles visible in camera
+    start_row = (cam.y / @tile_size).floor.clamp 0, @map_rows - 1
+    start_col = (cam.x / @tile_size).floor.clamp 0, @map_cols - 1
+    rows_to_render = ((HEIGHT / @tile_size) + 1).floor
+    cols_to_render = ((WIDTH / @tile_size) + 1).floor
+    end_row = (start_row + rows_to_render).clamp 0, @map_rows - 1
+    end_col = (start_col + cols_to_render).clamp 0, @map_cols - 1
+    (start_row..end_row).each { |r|
+      (start_col..end_col).each { |c|
+        e = @map[r][c]
+        cam.render_tile args, @tileset_image_file, r, c, @tile_size, ((e - 1) / @tile_cols).to_i, (e - 1) % @tile_cols, e
       }
     }
     # debug
+    args.outputs.labels << { text: "tile rendering #{start_row},#{start_col}::#{end_row},#{end_col}", x: 10, y: args.grid.h - 90, **BLACK }
     if (args.state.debug)
       @walls.each { |w|
         if w.platform
