@@ -57,9 +57,9 @@ class Gun
       len = Math.sqrt dx**2 + dy**2
       dx /= len
       dy /= len
-      x = x + offset * dx
-      y = y + offset * dy - 1
-      @add_bullet.call args, (Bullet.new args, @bullet, x, y, @speed * dx, @speed * dy, tdeg)
+      bx = x + offset * dx
+      by = y + offset * dy - 1
+      @add_bullet.call args, (Bullet.new args, @bullet, bx, by, @speed * dx, @speed * dy, tdeg)
       deg += angle_per_bullet
     }
   end

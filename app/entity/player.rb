@@ -84,7 +84,7 @@ class Player < Entity
     @hit_time -= 1
 
     # shooting
-    @gun&.update args, @x, @y, @mx, @my
+    @gun&.update args, @x, @y, @mx, @my, 20
     @fire_time -= 1
 
   end
