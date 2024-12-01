@@ -24,8 +24,8 @@ class Bullet < Entity
     @y += @dy
     @time += 1
 
-    if @time > 10
-      @remove = true
+    if @time > 20
+      # @remove = true
       return
     end
   end

@@ -1,6 +1,8 @@
 class Gem < Entity
 
-  def initialize path, x, y, w, h, dx, dy, count = -1, interval = -1
+  attr_reader :value
+
+  def initialize path, x, y, dx, dy
     super()
     @path = path
     @x = x
@@ -9,14 +11,31 @@ class Gem < Entity
     @h = h
     @dx = dx
     @dy = dy
-    @count = count
-    @interval = interval
     @gravity = 0 if dy == 0
     @friction = 0
     @cw = @ch = 12
 
     @max_speed = dx
     @jump_vel = dy
+
+    @w = @h = case path
+    when "amber", "emerald", "sapphire" then 12
+    end
+
+    @count = case path
+    when "amber", "emerald", "sapphire" then 24
+    end
+
+    @interval = case path
+    when "amber", "emerald", "sapphire" then 1
+    end
+
+    @value = case path
+    when "amber" then 1
+    when "emerald" then 3
+    when "sapphire" then 3
+    else 0
+    end
 
     @animation = Animation.new @count, @interval
   end

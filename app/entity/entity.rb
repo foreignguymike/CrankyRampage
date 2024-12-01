@@ -1,7 +1,7 @@
 class Entity
   ACCEL = 500 / 60 / 60
 	FRICTION = 500 / 60 / 60
-  GRAVITY = 300 / 60 / 60
+  GRAVITY = 500 / 60 / 60
   MAX_FALL_SPEED = 200 / 60
   JUMP = 200 / 60
 
@@ -32,6 +32,7 @@ class Entity
     @left = @right = @down = false
     @drop = false
     @max_speed = 70 / 60
+    @jump_speed = JUMP
     @flash = false
     @flash_time = 0
 	end
@@ -54,7 +55,7 @@ class Entity
 
   def jump
     if @on_ground
-      @dy = JUMP
+      @dy = @jump_speed
     end
   end
 

@@ -25,7 +25,6 @@ class TiledMap
         @map_width = @map_cols * @tile_size
         @map_height = @map_rows * @tile_size
       when "objectgroup"
-        puts "found objectgroup #{c}"
         name = c[:attributes]["name"]
         case name
         when "walls", "platforms"
@@ -43,7 +42,7 @@ class TiledMap
             case attrs["name"]
             when "player"
               @p = { x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
-            when "gem", "spikewheel"
+            else
               @entities << { name: attrs["name"], x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
             end
           }
@@ -78,7 +77,6 @@ class TiledMap
       }
     }
     # debug
-    args.outputs.labels << { text: "tile rendering #{start_row},#{start_col}::#{end_row},#{end_col}", x: 10, y: args.grid.h - 90, **BLACK }
     if (args.state.debug)
       @walls.each { |w|
         if w.platform

@@ -103,19 +103,21 @@ class Camera
     }
   end
 
-  def render_solid args, x, y, w, h, r, g, b, a
+  def render_text args, text, font, size_px, x, y, r, g, b, a = 255, v_align = 1, h_align = 0
     sx, sy = to_screen_space x, y
-    sw = scale_w w
-    sh = scale_h h
-    args.outputs.solids << {
-      x: sx - sw / 2,
-      y: sy - sh / 2,
-      w: sw,
-      h: sh,
+    px = scale_w size_px
+    args.outputs.labels << { 
+      x: sx,
+      y: sy,
+      text: text,
+      font: font,
+      size_px: px,
       r: r,
       g: g,
       b: b,
-      a: a
+      vertical_alignment_enum: v_align,
+      alignment_enum: h_align
     }
   end
+
 end

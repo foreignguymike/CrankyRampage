@@ -16,6 +16,11 @@ class ScreenManager
     @screens.pop
   end
 
+  def replace s
+    pop
+    push s
+  end
+
   def peek
     return nil if @screens.empty?
     @screens.last

@@ -1,11 +1,11 @@
-require 'app/util/utils'
-
 class Player < Entity
+
+  attr_reader :money
 
   INVULNERABILITY_TIME = 2 * 60
 
   def initialize
-    super
+    super()
     @cw = 10
     @ch = 24
     @cyo = -4
@@ -14,20 +14,24 @@ class Player < Entity
     @fire_time = 0
     @max_speed = 120 / 60
     @hit_time = 0
+    @jump_speed = 250 / 60
     @stagger = false
+    @mx = @my = 0
+    @money = 0
+  end
+
+  def set_gun gun
+    @gun = gun unless @gun.is_a? gun.class
   end
 
   def look_at mx, my
+    @mx = mx
+    @my = my
     @rad = Math.atan2(my - @y, mx - x)
   end
 
   def fire
-    if @fire_time < 0
-      @fire_time = 10
-      return true
-    else
-      return false
-    end
+    @gun&.fire
   end
 
   private def check_input
@@ -66,6 +70,7 @@ class Player < Entity
     # check collectables
     collectables.each { |c|
       if Utils.overlaps? c.crect, crect
+        @money += c.value
         args.audio[:csfx] = { input: "sounds/gem.wav", gain: 0.7, looping: false }
         c.remove = true
       end
@@ -75,6 +80,7 @@ class Player < Entity
     @hit_time -= 1
 
     # shooting
+    @gun&.update args, @x, @y, @mx, @my
     @fire_time -= 1
 
   end
