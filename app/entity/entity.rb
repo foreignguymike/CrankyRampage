@@ -76,14 +76,14 @@ class Entity
     if !@right && @dx > 0 then @dx = (@dx - FRICTION).clamp(0, @dx) end
   end
 
-  def check_collision walls, has_friction = true, collision = true
+  def apply_physics walls, has_friction = true, check_collision = true
     # gravity
     @dy = (@dy - @gravity).clamp(-MAX_FALL_SPEED, 1000)
 
     # friction
     apply_friction if has_friction
 
-    return unless collision
+    return unless check_collision
 
     # check collision x
     @wx = walls.find { |w|

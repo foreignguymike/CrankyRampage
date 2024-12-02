@@ -20,7 +20,7 @@ class Slimer < Enemy
       @max_speed = -@max_speed
       @dx = @max_speed
     end
-    check_collision walls, false
+    apply_physics walls, false
     @x += @dx
     @y += @dy
     

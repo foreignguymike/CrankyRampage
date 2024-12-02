@@ -48,7 +48,7 @@ class Player < Entity
     check_input if !@stagger
 
     # check collision
-    check_collision walls, !@stagger
+    apply_physics walls, !@stagger
 
     # move
     @x += @dx
