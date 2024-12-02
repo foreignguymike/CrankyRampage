@@ -18,6 +18,7 @@ class Gem < Entity
     @max_speed = dx
     @jump_vel = dy
     @frozen = frozen
+    @in_place_count = 0
 
     @w = @h = case path
     when "amber", "emerald", "sapphire" then 12
@@ -70,7 +71,13 @@ class Gem < Entity
       @dy = ny * 200 / 60
     end
 
-    check_collision walls, false, @player == nil && !@frozen
+    @dx = 0 if @dx.abs < 0.0001 
+    @dy = 0 if @dy.abs < 0.0001
+    @dx == 0 && @dy == 0 ? @in_place_count += 1 : @in_place_count = 0
+    should_check_collision = @player == nil && !@frozen && @dx != 0 && @dy != 0 && @cx == nil && @cy == nil && @in_place_count < 5
+    if @dx != 0 && @dy != 0
+      check_collision walls, false, should_check_collision
+    end
     @x += @dx
     @y += @dy
 
