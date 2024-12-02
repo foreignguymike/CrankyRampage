@@ -22,12 +22,11 @@ class ScreenManager
   end
 
   def peek
-    return nil if @screens.empty?
     @screens.last
   end
 
   def tick args
-    if peek
+    if peek != nil
       peek.update args
       peek.render args
     end

@@ -8,8 +8,8 @@ class Bullet < Entity
     @dy = dy
     @render_deg = deg
     @time = 0
-    @cw = @ch = 10
     set_image args, path
+    @cw = @ch = [@w, @h].min
   end
 
   def update walls

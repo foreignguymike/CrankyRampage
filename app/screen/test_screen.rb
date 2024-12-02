@@ -3,19 +3,10 @@ class TestScreen < Screen
   def initialize args
     super()
 
-    @random = Random.new
-
     @bullets = []
     @particles = []
     @enemies = []
     @collectables = []
-
-    # @enemies << (SpikeWheel.new 350, 50)
-    # @enemies << (SpikeWheel.new 550, 50)
-    # @enemies << (SpikeWheel.new 880, 32)
-    # @enemies << (SpikeWheel.new 1200, 32)
-    # @enemies << (SpikeWheel.new 1350, 32)
-    # @enemies << (SpikeWheel.new 1500, 32)
 
     @tiled_map = TiledMap.new "assets/testmap.tmx"
 
@@ -45,6 +36,8 @@ class TestScreen < Screen
         @collectables << (Gem.new e.name, e.x, e.y, 0, 0)
       when "spikewheel"
         @enemies << (SpikeWheel.new e.x, e.y)
+      when "slimer"
+        @enemies << (Slimer.new e.x, e.y)
       end
     }
   end
@@ -57,7 +50,7 @@ class TestScreen < Screen
     }
   end
 
-  private def update_cam mx, my
+  private def update_cam
     @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
     # follow mouse
     # midx = (@player.x + mx) / 2
@@ -80,12 +73,8 @@ class TestScreen < Screen
     end
     @player.left = args.inputs.left
     @player.right = args.inputs.right
-    if args.inputs.down
-      @player.drop
-    end
-    if args.inputs.up
-      @player.jump
-    end
+    @player.drop if args.inputs.down
+    @player.jump if args.inputs.up
     if args.state.debug
       if args.inputs.keyboard.key_down.one
         @player.set_gun Gun::Pistol.new add_bullet
@@ -141,7 +130,7 @@ class TestScreen < Screen
     }
 
     # cam follow player
-    update_cam mx, my
+    update_cam
 
     # update player
     @player.look_at mx, my
@@ -179,6 +168,7 @@ class TestScreen < Screen
       args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 10, y: args.grid.h - 220, **BLACK }
       args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 240, **BLACK }
       args.outputs.labels << { text: "entity count #{@collectables.size + @enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 260, **BLACK }
+      args.outputs.labels << { text: "gun #{@player.gun.class.name}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 280, **BLACK }
       args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **BLACK }
     end
   end

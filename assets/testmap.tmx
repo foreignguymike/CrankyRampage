@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="400" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="247">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="400" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="248">
  <tileset firstgid="1" source="ship.tsx"/>
  <layer id="1" name="map" width="40" height="400">
   <data encoding="csv">
@@ -406,7 +406,7 @@
 </data>
  </layer>
  <objectgroup id="4" name="entities">
-  <object id="62" name="player" x="66.3334" y="6329.33">
+  <object id="62" name="player" x="68.3334" y="6330.33">
    <ellipse/>
   </object>
   <object id="82" name="emerald" x="304" y="6368">
@@ -454,22 +454,22 @@
   <object id="106" name="amber" x="176" y="6368">
    <ellipse/>
   </object>
-  <object id="107" name="spikewheel" x="105" y="6250.5">
+  <object id="107" name="slimer" x="105" y="6250.5">
    <ellipse/>
   </object>
-  <object id="108" name="spikewheel" x="187" y="6253">
+  <object id="108" name="slimer" x="187" y="6253">
    <ellipse/>
   </object>
-  <object id="109" name="spikewheel" x="351" y="6256">
+  <object id="109" name="slimer" x="345.5" y="6249">
    <ellipse/>
   </object>
-  <object id="110" name="spikewheel" x="437.5" y="6258">
+  <object id="110" name="slimer" x="442" y="6254">
    <ellipse/>
   </object>
-  <object id="128" name="spikewheel" x="258" y="6078.67">
+  <object id="128" name="slimer" x="258" y="6078.67">
    <ellipse/>
   </object>
-  <object id="129" name="spikewheel" x="433.638" y="6077.58">
+  <object id="129" name="slimer" x="433.638" y="6077.58">
    <ellipse/>
   </object>
   <object id="130" name="amber" x="208" y="5984">
@@ -580,13 +580,13 @@
   <object id="217" name="sapphire" x="176" y="5616">
    <ellipse/>
   </object>
-  <object id="221" name="dropper" x="256" y="5376">
+  <object id="221" name="yoyo" x="256" y="5376">
    <ellipse/>
   </object>
-  <object id="222" name="spikewheel" x="417.833" y="5454.5">
+  <object id="222" name="slimer" x="417.833" y="5454.5">
    <ellipse/>
   </object>
-  <object id="223" name="spikewheel" x="496.5" y="5454.83">
+  <object id="223" name="slimer" x="496.5" y="5454.83">
    <ellipse/>
   </object>
   <object id="224" name="emerald" x="592" y="5456">
@@ -607,13 +607,16 @@
   <object id="229" name="amber" x="320" y="5408">
    <ellipse/>
   </object>
-  <object id="243" name="spikewheel" x="198.5" y="5839.5">
+  <object id="243" name="slimer" x="198.5" y="5839.5">
    <ellipse/>
   </object>
-  <object id="244" name="spikewheel" x="369.5" y="5840.5">
+  <object id="244" name="slimer" x="369.5" y="5840.5">
    <ellipse/>
   </object>
-  <object id="245" name="spikewheel" x="480" y="5707">
+  <object id="245" name="slimer" x="480" y="5707">
+   <ellipse/>
+  </object>
+  <object id="247" name="slimer" x="243.5" y="5454.5">
    <ellipse/>
   </object>
  </objectgroup>

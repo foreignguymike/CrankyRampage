@@ -1,6 +1,6 @@
 class Player < Entity
 
-  attr_reader :money
+  attr_reader :money, :gun
 
   INVULNERABILITY_TIME = 2 * 60
 
@@ -20,7 +20,6 @@ class Player < Entity
     @money = 0
     @magnet_range = 35
     @max_health = @health = 3
-    @hflip = false
     @rad = 0
   end
 

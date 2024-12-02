@@ -76,8 +76,8 @@ class Camera
     args.outputs.sprites << {
       x: sx.round,
       y: sy.round,
-      w: ss,
-      h: ss,
+      w: ss + 1, # the + 1 is an attempt to fix weird line rendering gaps
+      h: ss + 1,
       path: tileset,
       tile_x: tile_col * size,
       tile_y: tile_row * size,
@@ -86,7 +86,7 @@ class Camera
     }
   end
 
-  def render_box args, x, y, w, h, r, g, b, a
+  def render_box args, x, y, w, h, r, g, b, a = 255
     sx, sy = to_screen_space x, y
     sw = scale_w w
     sh = scale_h h

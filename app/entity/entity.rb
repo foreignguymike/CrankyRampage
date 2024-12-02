@@ -39,6 +39,7 @@ class Entity
     @flash = false
     @flash_time = 0
     @health = 0
+    @hflip = false
 	end
 
   def set_image args, region
