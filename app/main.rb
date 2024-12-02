@@ -33,7 +33,7 @@ def setup_game args, force = false
   # debug
   args.state.health = 3
   args.state.max_health = 3
-  args.state.money = 212
+  args.state.money = 412
   args.state.gun = "pistol"
   args.state.sm.push ShopScreen.new args, "test2"
   # args.state.sm.push TestScreen.new args

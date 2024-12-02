@@ -19,7 +19,7 @@ class ShopScreen < Screen
     add_heart = Button.new("+1 Heart - #{@add_heart_cost}", 220, 130, 100, 15) {
       if @money >= @add_heart_cost
         @max_health += 1
-        @health = @max_health if @health == @max_health - 1
+        @health += 1
         @money -= @add_heart_cost
         @add_heart_cost = (@max_health - 2) * 50
         add_heart.text = "+1 Heart - #{@add_heart_cost}"

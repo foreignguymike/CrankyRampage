@@ -18,6 +18,8 @@ class Bullet < Entity
     when "triplet" then 40
     when "wave" then 25
     when "beam" then 10
+
+    when "greenslime" then 100
     end
 
     @damage = case path
@@ -26,6 +28,12 @@ class Bullet < Entity
     when "triplet" then 18
     when "wave" then 20
     when "beam" then 2
+
+    when "greenslime" then 1
+    end
+
+    if path == "greenslime"
+      @cw = @ch = 1
     end
   end
 

@@ -43,7 +43,7 @@
   <object id="16" name="slimer" x="1232" y="160">
    <ellipse/>
   </object>
-  <object id="17" name="sneaky" x="1424" y="128">
+  <object id="17" name="sneaky" x="1416" y="128">
    <ellipse/>
   </object>
   <object id="18" name="sneaky" x="1584" y="128">
@@ -67,7 +67,7 @@
   <object id="54" name="sapphire" x="912" y="32">
    <ellipse/>
   </object>
-  <object id="61" name="player" x="64" y="144">
+  <object id="61" name="player" x="1195" y="108">
    <ellipse/>
   </object>
   <object id="64" name="emerald" x="1040" y="64">

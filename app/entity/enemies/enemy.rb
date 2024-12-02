@@ -1,4 +1,7 @@
 class Enemy < Entity
+  
+  attr_reader :gems
+
   def initialize x, y
     super()
     @x = x

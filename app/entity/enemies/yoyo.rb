@@ -1,13 +1,9 @@
 class Yoyo < Enemy
 
-  attr_reader :health, :gems
-
   def initialize x, y
     super x, y
     @max_speed = 60 / 60
     @cw = @ch = 15
-    @dx = -@max_speed
-    @left = true
     @max_health = @health = 70
     @gems = [ { type:"sapphire"}, { type:"amber"}, { type:"amber"} ]
 
@@ -16,7 +12,7 @@ class Yoyo < Enemy
     @original_y = y
   end
 
-  def update args, player, walls, bullets
+  def update args, player, walls, bullets, enemy_bullets
     wall = walls.find { |w|
       if w.platform then next end
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y)
@@ -45,7 +41,7 @@ class Yoyo < Enemy
     end
 
     check_bullets args, bullets
-    if @flash_time == 4 && !@attacking && !@retreating # just got hit
+    if @flash_time == 4 && !@attacking && !@retreating
       @attacking = true
     end
 

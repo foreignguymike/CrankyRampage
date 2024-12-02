@@ -7,9 +7,13 @@ class Screen
     @ui_cam.set_size WIDTH, HEIGHT
 
     @bullets = []
+    @enemy_bullets = []
     @particles = []
     @enemies = []
     @collectables = []
+
+    # debug
+    @enemy_update_time = @collectable_update_time = @particle_update_time = @bullet_update_time = @enemy_bullet_update_time = @player_update_time = 0
   end
 
   def add_bullet

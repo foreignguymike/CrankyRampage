@@ -24,9 +24,6 @@ class Test2Screen < Screen
 
     @ui = UI.new @player
 
-    # debug
-    @enemy_update_time = @collectable_update_time = @particle_update_time = @bullet_update_time = @player_update_time = 0
-
     # play music
     # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
   end
@@ -40,6 +37,8 @@ class Test2Screen < Screen
         @enemies << (Yoyo.new e.x, e.y)
       when "slimer"
         @enemies << (Slimer.new e.x, e.y)
+      when "sneaky"
+        @enemies << (Sneaky.new e.x, e.y)
       end
     }
   end
@@ -84,7 +83,7 @@ class Test2Screen < Screen
     # update enemies
     start_time = Time.now
     @enemies.reject! { |e| 
-      e.update args, @player, @tiled_map.walls, @bullets
+      e.update args, @player, @tiled_map.walls, @bullets, @enemy_bullets
       if e.health <= 0
         @particles << (Particle.new "explosion", e.x, e.y + 7, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
@@ -125,13 +124,21 @@ class Test2Screen < Screen
     }
     @bullet_update_time = Time.now - start_time
 
+    # update enemy bullets
+    start_time = Time.now
+    @enemy_bullets.reject! { |b|
+      b.update @tiled_map.walls
+      b.remove
+    }
+    @enemy_bullet_update_time = Time.now - start_time
+
     # cam follow player
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2, 0.08
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2 + 6, 0.08
 
     # update player
     @player.look_at mx, my
     start_time = Time.now
-    @player.update args, @tiled_map.walls, @enemies, @collectables
+    @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
     args.state.sm.replace Test2Screen.new args if @player.health <= 0
     @player_update_time = Time.now - start_time
 
@@ -154,6 +161,7 @@ class Test2Screen < Screen
     @tiled_map.render args, @cam
     @collectables.each { |c| c.render args, @cam }
     @bullets.each { |b| b.render args, @cam }
+    @enemy_bullets.each { |b| b.render args, @cam }
     @particles.each { |p| p.render args, @cam }
 
     @ui.render args, @ui_cam
@@ -174,7 +182,8 @@ class Test2Screen < Screen
       args.outputs.labels << { text: "Collectable time: #{(1000 * @collectable_update_time).round(0)}ms", x: 10, y: args.grid.h - 340, **color }
       args.outputs.labels << { text: "Particle time: #{(1000 * @particle_update_time).round(0)}ms", x: 10, y: args.grid.h - 360, **color }
       args.outputs.labels << { text: "Bullet time: #{(1000 * @bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 380, **color }
-      args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
+      args.outputs.labels << { text: "Enemy Bullet time: #{(1000 * @enemy_bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
+      args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 420, **color }
       args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **color }
     end
   end

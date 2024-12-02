@@ -1,5 +1,4 @@
 class Slimer < Enemy
-  attr_reader :health, :gems
 
   def initialize x, y
     super x, y
@@ -15,7 +14,7 @@ class Slimer < Enemy
     @animation = Animation.new 4, 5
   end
 
-  def update args, player, walls, bullets
+  def update args, player, walls, bullets, enemy_bullets
     if @wx != nil
       @max_speed = -@max_speed
       @dx = @max_speed

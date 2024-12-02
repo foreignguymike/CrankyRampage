@@ -38,13 +38,22 @@ class Player < Entity
     @gun&.fire
   end
 
+  private def hit args, damage
+    @hit_time = INVULNERABILITY_TIME
+    @dx = @hflip ? 60 / 60 : -60 / 60
+    @dy = 80 / 60
+    @stagger = true
+    @health -= damage
+    args.audio[:psfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
+  end
+
   private def check_input
     # input
     if @left then @dx = (@dx - ACCEL).clamp(-@max_speed, 0) end
     if @right then @dx = (@dx + ACCEL).clamp(0, @max_speed) end
   end
 
-  def update args, walls, enemies, collectables
+  def update args, walls, enemies, enemy_bullets, collectables
     # check input
     check_input if !@stagger
 
@@ -60,14 +69,12 @@ class Player < Entity
       @stagger = false
     end
     if @hit_time < 0
-      enemies.find { |e| Utils.overlaps? e.crect, crect }&.tap {
-        @hit_time = INVULNERABILITY_TIME
-        @dx = @hflip ? 60 / 60 : -60 / 60
-        @dy = 80 / 60
-        @stagger = true
-        @health -= 1
-        args.audio[:sfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
-      }
+      enemies.find { |e| Utils.overlaps? e.crect, crect }&.tap { hit args, 1 }
+    end
+
+    # check enemy bullets
+    if @hit_time < 0
+      enemy_bullets.find { |b| Utils.overlaps? b.crect, crect }&.tap { |b| hit args, b.damage }
     end
 
     # check collectables
