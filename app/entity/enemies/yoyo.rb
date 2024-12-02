@@ -22,7 +22,7 @@ class Yoyo < Enemy
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y)
     }
 
-    if !@attacking && !@retreating && (player.x - @x).abs < 30
+    if !@attacking && !@retreating && (player.x - @x).abs < 30 && @original_y - player.y < 150
       @attacking = true
     end
     if @attacking
@@ -45,8 +45,12 @@ class Yoyo < Enemy
     end
 
     check_bullets args, bullets
+    if @flash_time == 4 && !@attacking && !@retreating # just got hit
+      @attacking = true
+    end
+
     if @health <= 0
-      y = @y + (wall == nil ? 0 : (wall.y < @y ? @ch / 2 : -@ch / 2))
+      y = (wall == nil || wall.platform ? @y : (wall.y > @y ? wall.y - wall.h / 2 - 12 : wall.y + wall.h / 2 + 12))
       @gems.each { |g| g[:y] = y }
     end
   end

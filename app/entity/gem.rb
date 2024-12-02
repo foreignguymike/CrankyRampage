@@ -2,7 +2,7 @@ class Gem < Entity
 
   attr_reader :value
 
-  def initialize path, x, y, dx, dy
+  def initialize path, x, y, dx, dy, frozen = true
     super()
     @path = path
     @x = x
@@ -17,6 +17,7 @@ class Gem < Entity
 
     @max_speed = dx
     @jump_vel = dy
+    @frozen = frozen
 
     @w = @h = case path
     when "amber", "emerald", "sapphire" then 12
@@ -69,7 +70,7 @@ class Gem < Entity
       @dy = ny * 200 / 60
     end
 
-    check_collision walls, false
+    check_collision walls, false, @player == nil && !@frozen
     @x += @dx
     @y += @dy
 

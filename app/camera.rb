@@ -3,35 +3,44 @@ require 'app/constants'
 class Camera
   SCREEN_WIDTH = 1280
   SCREEN_HEIGHT = 720
-  SCALE_X = SCREEN_WIDTH.to_f / WIDTH
-  SCALE_Y = SCREEN_HEIGHT.to_f / HEIGHT
   
   attr_reader :x, :y
+
+  attr_accessor :render_count
 
   def initialize
     @x = 0
     @y = 0
+    @render_count = 0
+    set_size SCREEN_WIDTH, SCREEN_HEIGHT
+  end
+
+  def set_size w, h
+    @w = w
+    @h = h
+    @scale_x = SCREEN_WIDTH / w
+    @scale_y = SCREEN_HEIGHT / h
   end
 
   def look_at x, y, ease=1
-    @x += (x - (SCREEN_WIDTH / 2) / SCALE_X - @x) * ease
-    @y += (y - (SCREEN_HEIGHT / 2) / SCALE_Y - @y) * ease
+    @x += (x - (SCREEN_WIDTH / 2) / @scale_x - @x) * ease
+    @y += (y - (SCREEN_HEIGHT / 2) / @scale_y - @y) * ease
   end
 
   def to_screen_space x, y
-    [(x - @x) * SCALE_X, (y - @y) * SCALE_Y]
+    [(x - @x) * @scale_x, (y - @y) * @scale_y]
   end
 
   def from_screen_space x, y
-    [(x / SCALE_X) + @x, (y / SCALE_Y) + @y]
+    [(x / @scale_x) + @x, (y / @scale_y) + @y]
   end
 
   def scale_w width
-    width * SCALE_X
+    width * @scale_x
   end
 
   def scale_h height
-    height * SCALE_Y
+    height * @scale_y
   end
 
   def render args, objects
@@ -39,9 +48,11 @@ class Camera
       sx, sy = to_screen_space obj.x, obj.y
       sw = scale_w obj.w
       sh = scale_h obj.h
+      next unless Utils.overlaps? obj.crect, { x: @x, y: @y, w: @w, h: @h }
       hide = obj.hide || false
       alpha = obj.a || 255
       if !hide
+        @render_count += 1
         args.outputs.sprites << {
           x: sx - sw / 2,
           y: sy - sh / 2,
