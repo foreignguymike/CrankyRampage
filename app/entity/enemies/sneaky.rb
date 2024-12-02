@@ -1,0 +1,2 @@
+class Sneaky < Enemy
+end

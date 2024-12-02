@@ -1,9 +1,9 @@
-class TestScreen < Screen
+class Test2Screen < Screen
 
   def initialize args
     super()
 
-    @tiled_map = TiledMap.new "assets/testmap.tmx"
+    @tiled_map = TiledMap.new "assets/test2map.tmx"
 
     @player = Player.new
     @player.x = @tiled_map.p.x
@@ -50,7 +50,7 @@ class TestScreen < Screen
     args.state.max_health = @player.max_health
     args.state.money = @player.money
     args.state.gun = @player.gun.class.name.downcase
-    args.state.sm.replace ShopScreen.new args, "test2"
+    args.state.sm.replace ShopScreen.new args, "test"
   end
 
   def update args
@@ -126,13 +126,13 @@ class TestScreen < Screen
     @bullet_update_time = Time.now - start_time
 
     # cam follow player
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2, 0.08
 
     # update player
     @player.look_at mx, my
     start_time = Time.now
     @player.update args, @tiled_map.walls, @enemies, @collectables
-    args.state.sm.replace TestScreen.new args if @player.health <= 0
+    args.state.sm.replace Test2Screen.new args if @player.health <= 0
     @player_update_time = Time.now - start_time
 
     # update cursor
@@ -148,12 +148,6 @@ class TestScreen < Screen
 
   def render args
     Utils.clear_screen args, 20, 20, 40, 255
-    @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
-    @cloudx = (@cloudx + 0.04) % WIDTH
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30 - @cam.y / 20, WIDTH, HEIGHT
 
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }

@@ -1,7 +1,9 @@
 class ShopScreen < Screen
 
-  def initialize args
+  def initialize args, next_screen
     super()
+
+    @next_screen = next_screen
 
     @money = args.state.money
     @health = args.state.health
@@ -67,6 +69,11 @@ class ShopScreen < Screen
     args.state.money = @money
     args.state.gun = @gun
     args.state.sm.replace TestScreen.new args
+    case @next_screen
+    when "test2" then args.state.sm.replace Test2Screen.new args
+    when "boss" then args.state.sm.replace BossScreen.new args
+    else args.state.sm.replace TestScreen.new args
+    end
   end
 
   def update args

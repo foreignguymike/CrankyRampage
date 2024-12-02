@@ -25,7 +25,7 @@ class Bullet < Entity
     when "machinegun" then 16
     when "triplet" then 18
     when "wave" then 20
-    when "beam" then 3
+    when "beam" then 2
     end
   end
 
