@@ -63,6 +63,16 @@ class Gun
       deg += angle_per_bullet
     }
   end
+
+  def self.from name, *args
+    case name
+    when "triplet" then Triplet.new *args
+    when "machinegun" then MachineGun.new *args
+    when "spreader" then Spreader.new *args
+    when "beam" then Beam.new *args
+    else Pistol.new *args
+    end
+  end
 end
 
 class Pistol < Gun

@@ -18,7 +18,7 @@ class Entity
   attr_reader :cxo, :cyo, :cw, :ch
 
   # game
-  attr_reader :health, :max_health
+  attr_accessor :health, :max_health
 
   # render
   attr_reader :a, :render_deg, :image, :hide, :hflip, :flash

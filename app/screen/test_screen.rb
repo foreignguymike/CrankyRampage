@@ -3,18 +3,15 @@ class TestScreen < Screen
   def initialize args
     super()
 
-    @bullets = []
-    @particles = []
-    @enemies = []
-    @collectables = []
-
     @tiled_map = TiledMap.new "assets/testmap.tmx"
 
     @player = Player.new
     @player.x = @tiled_map.p.x
     @player.y = @tiled_map.p.y
-    @player.set_gun Gun::Pistol.new add_bullet
-    @player.money = args.state.money || 0
+    @player.set_gun Gun.from args.state.gun, add_bullet
+    @player.money = (args.state.money ||= 0)
+    @player.health = (args.state.health ||= @player.max_health)
+    @player.max_health = (args.state.max_health ||= @player.max_health)
 
     parse_map
 
@@ -27,6 +24,10 @@ class TestScreen < Screen
 
     @ui = UI.new @player
 
+    # debug
+    @enemy_update_time = @collectable_update_time = @particle_update_time = @bullet_update_time = @player_update_time = 0
+
+    # play music
     # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
   end
 
@@ -43,12 +44,13 @@ class TestScreen < Screen
     }
   end
 
-  private def add_bullet
-    ->(args, b) {
-      args.audio[:sfx] = { input: "sounds/shoot.wav", gain: 0.2, looping: false }
-      @bullets << b
-      @particles << (Particle.new "gunflash", b.x - b.dx, b.y - b.dy, 7, 7, 0, 0, 3, 2, true)
-    }
+  private def finish args
+    $gtk.show_cursor
+    args.state.health = @player.health
+    args.state.max_health = @player.max_health
+    args.state.money = @player.money
+    args.state.gun = @player.gun.class.name.downcase
+    args.state.sm.replace ShopScreen.new args
   end
 
   def update args
@@ -130,7 +132,7 @@ class TestScreen < Screen
     @player.look_at mx, my
     start_time = Time.now
     @player.update args, @tiled_map.walls, @enemies, @collectables
-    @pplayer_update_time = Time.now - start_time
+    @player_update_time = Time.now - start_time
 
     # update cursor
     @cursor.x = mx
@@ -139,8 +141,7 @@ class TestScreen < Screen
 
     # end level
     if @player.x > @tiled_map.map_width
-      args.state.money = @player.money
-      args.state.sm.replace TestScreen.new args
+      finish args
     end
   end
 
@@ -178,7 +179,7 @@ class TestScreen < Screen
       args.outputs.labels << { text: "Collectable time: #{(1000 * @collectable_update_time).round(0)}ms", x: 10, y: args.grid.h - 340, **color }
       args.outputs.labels << { text: "Particle time: #{(1000 * @particle_update_time).round(0)}ms", x: 10, y: args.grid.h - 360, **color }
       args.outputs.labels << { text: "Bullet time: #{(1000 * @bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 380, **color }
-      args.outputs.labels << { text: "Player time: #{(1000 * @pplayer_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
+      args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
       args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **color }
     end
   end
