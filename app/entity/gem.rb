@@ -27,7 +27,7 @@ class Gem < Entity
     end
 
     @interval = case path
-    when "amber", "emerald", "sapphire" then 1
+    when "amber", "emerald", "sapphire" then 3
     end
 
     @value = case path

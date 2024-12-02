@@ -406,7 +406,7 @@
 </data>
  </layer>
  <objectgroup id="4" name="entities">
-  <object id="62" name="player" x="68.3334" y="6330.33">
+  <object id="62" name="player" x="68.7955" y="6328.17">
    <ellipse/>
   </object>
   <object id="82" name="emerald" x="304" y="6368">
@@ -580,7 +580,7 @@
   <object id="217" name="sapphire" x="176" y="5616">
    <ellipse/>
   </object>
-  <object id="221" name="yoyo" x="256" y="5376">
+  <object id="221" name="yoyo" x="256" y="5372">
    <ellipse/>
   </object>
   <object id="222" name="slimer" x="417.833" y="5454.5">

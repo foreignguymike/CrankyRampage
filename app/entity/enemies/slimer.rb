@@ -3,19 +3,19 @@ class Slimer < Enemy
 
   def initialize x, y
     super x, y
-    @max_speed = 60 / 60
+    @max_speed = 40 / 60
     @cw = @ch = 15
     @dx = -@max_speed
     @left = true
     @max_health = @health = 5
-    @gems = ["amber", "amber", "emerald"]
+    @gems = [ { type:"amber"}, { type:"amber"}, { type:"emerald"} ]
     @cw = 32
     @ch = 10
     @cyo = -11
     @animation = Animation.new 4, 5
   end
 
-  def update args, walls, bullets
+  def update args, player, walls, bullets
     if @wx != nil
       @max_speed = -@max_speed
       @dx = @max_speed

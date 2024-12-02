@@ -19,7 +19,7 @@ class TestScreen < Screen
 
     @cloudx = 0
 
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2)
 
     @cursor = Cursor.new
     $gtk.hide_cursor
@@ -34,8 +34,8 @@ class TestScreen < Screen
       case e.name
       when "amber", "emerald", "sapphire", "ruby"
         @collectables << (Gem.new e.name, e.x, e.y, 0, 0)
-      when "spikewheel"
-        @enemies << (SpikeWheel.new e.x, e.y)
+      when "yoyo"
+        @enemies << (Yoyo.new e.x, e.y)
       when "slimer"
         @enemies << (Slimer.new e.x, e.y)
       end
@@ -95,7 +95,7 @@ class TestScreen < Screen
 
     # update enemies
     @enemies.reject! { |e| 
-      e.update args, @tiled_map.walls, @bullets
+      e.update args, @player, @tiled_map.walls, @bullets
       if e.health <= 0
         @particles << (Particle.new "explosion", e.x, e.y + 7, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
@@ -105,7 +105,7 @@ class TestScreen < Screen
           rad = rand * 2 * PI / 4 + PI / 4
           dx = Math.cos rad
           dy = Math.sin rad
-          @collectables << (Gem.new c, e.x, e.y, dx * 100 / 60, dy * 150 / 60)
+          @collectables << (Gem.new c.type, c.x || e.x, c.y || e.y, dx * 100 / 60, dy * 150 / 60)
         }
       end
       e.remove 
@@ -144,16 +144,16 @@ class TestScreen < Screen
 
   def render args
     Utils.clear_screen args, 20, 20, 40, 255
-    @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
-    @cloudx = (@cloudx + 0.02) % WIDTH
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30, WIDTH, HEIGHT
+    # @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
+    # @cloudx = (@cloudx + 0.02) % WIDTH
+    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    # @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30, WIDTH, HEIGHT
 
-    @tiled_map.render args, @cam
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }
+    @tiled_map.render args, @cam
     @collectables.each { |c| c.render args, @cam }
     @bullets.each { |b| b.render args, @cam }
     @particles.each { |p| p.render args, @cam }
