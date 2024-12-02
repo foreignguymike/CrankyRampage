@@ -59,15 +59,13 @@ class Player < Entity
       @stagger = false
     end
     if @hit_time < 0
-      enemies.each { |e|
-        if Utils.overlaps? e.crect, crect
-          @hit_time = INVULNERABILITY_TIME
-          @dx = @hflip ? 60 / 60 : -60 / 60
-          @dy = 80 / 60
-          @stagger = true
-          @health -= 1
-          args.audio[:sfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
-        end
+      enemies.find { |e| Utils.overlaps? e.crect, crect }&.tap {
+        @hit_time = INVULNERABILITY_TIME
+        @dx = @hflip ? 60 / 60 : -60 / 60
+        @dy = 80 / 60
+        @stagger = true
+        @health -= 1
+        args.audio[:sfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
       }
     end
 
