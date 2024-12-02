@@ -6,8 +6,6 @@ class Camera
   
   attr_reader :x, :y
 
-  attr_accessor :render_count
-
   def initialize
     @x = 0
     @y = 0
@@ -52,7 +50,6 @@ class Camera
       hide = obj.hide || false
       alpha = obj.a || 255
       if !hide
-        @render_count += 1
         args.outputs.sprites << {
           x: sx - sw / 2,
           y: sy - sh / 2,

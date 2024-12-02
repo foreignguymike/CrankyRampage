@@ -162,8 +162,6 @@ class TestScreen < Screen
     # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
     # @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30, WIDTH, HEIGHT
 
-    @cam.render_count = 0
-
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }
     @tiled_map.render args, @cam

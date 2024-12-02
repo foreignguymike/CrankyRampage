@@ -406,7 +406,7 @@
 </data>
  </layer>
  <objectgroup id="4" name="entities">
-  <object id="62" name="player" x="311.125" y="5390.13">
+  <object id="62" name="player" x="63.625" y="6328.38">
    <ellipse/>
   </object>
   <object id="82" name="emerald" x="304" y="6368">
