@@ -7,7 +7,7 @@ class Slimer < Enemy
     @cw = @ch = 15
     @dx = -@max_speed
     @left = true
-    @max_health = @health = 5
+    @max_health = @health = 50
     @gems = [ { type:"amber"}, { type:"amber"}, { type:"emerald"} ]
     @cw = 32
     @ch = 10

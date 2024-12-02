@@ -8,7 +8,7 @@ class Yoyo < Enemy
     @cw = @ch = 15
     @dx = -@max_speed
     @left = true
-    @max_health = @health = 5
+    @max_health = @health = 70
     @gems = [ { type:"sapphire"}, { type:"amber"}, { type:"amber"} ]
 
     @attacking = false

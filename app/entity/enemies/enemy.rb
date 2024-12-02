@@ -10,7 +10,7 @@ class Enemy < Entity
       next if b.remove
       if Utils.overlaps? b.crect, crect
         b.remove = true
-        @health -= 1
+        @health -= b.damage
         @flash = true
         @flash_time = 5
         if @health <= 0

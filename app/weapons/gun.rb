@@ -73,13 +73,13 @@ end
 
 class Triplet < Gun  
   def initialize add_bullet
-    super add_bullet, 30, 4, 3
+    super add_bullet, 30, 4, 3, bullet: "triplet"
   end
 end
 
 class MachineGun < Gun
   def initialize add_bullet
-    super add_bullet, 6, spread: 20
+    super add_bullet, 6, spread: 20, bullet: "machinegun"
   end
 end
 

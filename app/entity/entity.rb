@@ -40,6 +40,7 @@ class Entity
     @flash_time = 0
     @health = 0
     @hflip = false
+    @wg = nil
 	end
 
   def set_image args, region
@@ -76,7 +77,7 @@ class Entity
     if !@right && @dx > 0 then @dx = (@dx - FRICTION).clamp(0, @dx) end
   end
 
-  def apply_physics walls, has_friction = true, check_collision = true
+  def apply_physics walls, has_friction = true, check_collision = true, bounce = false
     # gravity
     @dy = (@dy - @gravity).clamp(-MAX_FALL_SPEED, 1000)
 
@@ -96,7 +97,7 @@ class Entity
       else
         @x = @wx.x + @wx.w / 2 - @cxo + @cw / 2
       end
-      @dx = 0
+      @dx = bounce ? -@dx : 0
     end
 
     # check collision y
@@ -114,7 +115,7 @@ class Entity
         @wg = @wy
         @on_ground = true
       end
-      @dy = 0
+      @dy = bounce ? -@dy : 0
     else
       @wg = nil
     end

@@ -14,6 +14,7 @@ class TestScreen < Screen
     @player.x = @tiled_map.p.x
     @player.y = @tiled_map.p.y
     @player.set_gun Gun::Pistol.new add_bullet
+    @player.money = args.state.money || 0
 
     parse_map
 
@@ -50,28 +51,9 @@ class TestScreen < Screen
     }
   end
 
-  private def update_cam
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
-    # follow mouse
-    # midx = (@player.x + mx) / 2
-    # midy = (@player.y + my) / 2
-    # dx = midx - @player.x
-    # dy = midy - @player.y
-    # dist = Math.sqrt dx**2 + dy**2
-    # if dist > 50
-    #   scale = 50 / dist
-    #   midx = @player.x + dx * scale
-    #   midy = @player.y + dy * scale
-    # end
-    # @cam.look_at [midx, WIDTH / 2].max, HEIGHT / 2, 0.07
-  end
-
   def update args
     @start_time = Time.now
     # handle key input
-    if args.inputs.keyboard.key_down.r || @player.health <= 0
-      args.state.sm.replace TestScreen.new args
-    end
     @player.left = args.inputs.left
     @player.right = args.inputs.right
     @player.drop if args.inputs.down
@@ -87,6 +69,9 @@ class TestScreen < Screen
         @player.set_gun Gun::Spreader.new add_bullet
       elsif args.inputs.keyboard.key_down.five
         @player.set_gun Gun::Beam.new add_bullet
+      end
+      if args.inputs.keyboard.key_down.r || @player.health <= 0
+        args.state.sm.replace TestScreen.new args
       end
     end
 
@@ -139,7 +124,7 @@ class TestScreen < Screen
     @bullet_update_time = Time.now - start_time
 
     # cam follow player
-    update_cam
+    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
 
     # update player
     @player.look_at mx, my
@@ -151,16 +136,22 @@ class TestScreen < Screen
     @cursor.x = mx
     @cursor.y = my
     @cursor.update
+
+    # end level
+    if @player.x > @tiled_map.map_width
+      args.state.money = @player.money
+      args.state.sm.replace TestScreen.new args
+    end
   end
 
   def render args
     Utils.clear_screen args, 20, 20, 40, 255
-    # @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
-    # @cloudx = (@cloudx + 0.02) % WIDTH
-    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    # @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    # @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30, WIDTH, HEIGHT
+    @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
+    @cloudx = (@cloudx + 0.04) % WIDTH
+    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
+    @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30 - @cam.y / 20, WIDTH, HEIGHT
 
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }

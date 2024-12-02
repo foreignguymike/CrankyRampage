@@ -1,6 +1,7 @@
 class Player < Entity
 
-  attr_reader :money, :gun
+  attr_accessor :money
+  attr_reader :gun
 
   INVULNERABILITY_TIME = 2 * 60
 
@@ -47,7 +48,7 @@ class Player < Entity
     # check input
     check_input if !@stagger
 
-    # check collision
+    # apply physics
     apply_physics walls, !@stagger
 
     # move

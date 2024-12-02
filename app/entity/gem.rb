@@ -72,11 +72,11 @@ class Gem < Entity
     end
 
     @dx = 0 if @dx.abs < 0.0001 
-    @dy = 0 if @dy.abs < 0.0001
+    # @dy = 0 if @dy.abs < 0.0001
     @dx == 0 && @dy == 0 ? @in_place_count += 1 : @in_place_count = 0
     should_check_collision = @player == nil && !@frozen && @dx != 0 && @dy != 0 && @cx == nil && @cy == nil && @in_place_count < 5
     if @dx != 0 && @dy != 0
-      apply_physics walls, false, should_check_collision
+      apply_physics walls, false, should_check_collision, true
     end
     @x += @dx
     @y += @dy

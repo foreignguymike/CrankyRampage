@@ -1,5 +1,7 @@
 class Bullet < Entity
 
+  attr_reader :damage
+
   def initialize args, path, x = 0, y = 0, dx = 0, dy = 0, deg = 0
     super()
     @x = x
@@ -7,9 +9,24 @@ class Bullet < Entity
     @dx = dx
     @dy = dy
     @render_deg = deg
-    @time = 0
     set_image args, path
     @cw = @ch = [@w, @h].min
+
+    @time = case path
+    when "pistol" then 10
+    when "machinegun" then 25
+    when "triplet" then 40
+    when "wave" then 25
+    when "beam" then 10
+    end
+
+    @damage = case path
+    when "pistol" then 12
+    when "machinegun" then 16
+    when "triplet" then 18
+    when "wave" then 20
+    when "beam" then 3
+    end
   end
 
   def update walls
@@ -22,10 +39,10 @@ class Bullet < Entity
 
     @x += @dx
     @y += @dy
-    @time += 1
+    @time -= 1
 
-    if @time > 20
-      # @remove = true
+    if @time < 0
+      @remove = true
       return
     end
   end
