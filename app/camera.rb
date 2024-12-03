@@ -56,7 +56,7 @@ class Camera
       hide = obj.hide || false
       alpha = obj.a || 255
       if !hide
-        args.outputs.sprites << {
+        @batch << {
           x: sx - sw / 2,
           y: sy - sh / 2,
           w: sw,
@@ -75,7 +75,7 @@ class Camera
     sx, sy = to_screen_space x, y
     sw = scale_w w
     sh = scale_h h
-    args.outputs.sprites << {
+    @batch << {
       x: sx - sw / 2,
       y: sy - sh / 2,
       w: sw,
@@ -87,7 +87,7 @@ class Camera
   def render_tile args, tileset, row, col, size, tile_row, tile_col, e
     sx, sy = to_screen_space col * size, row * size
     ss = scale_w size
-    args.outputs.sprites << {
+    @batch << {
       x: sx.round,
       y: sy.round,
       w: ss + 1, # the + 1 is an attempt to fix weird line rendering gaps
@@ -104,7 +104,7 @@ class Camera
     sx, sy = to_screen_space x, y
     sw = scale_w w
     sh = scale_h h
-    args.outputs.sprites << {
+    @batch << {
       x: sx - sw / 2,
       y: sy - sh / 2,
       w: sw,

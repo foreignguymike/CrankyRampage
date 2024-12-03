@@ -193,6 +193,7 @@ class BossScreen < Screen
       @bullets.each { |b| b.render args, @cam }
       @enemy_bullets.each { |b| b.render args, @cam }
       @particles.each { |p| p.render args, @cam }
+      @cam.flush args
 
       @ui.render args, @ui_cam
       @ui_cam.flush args

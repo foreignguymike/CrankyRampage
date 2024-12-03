@@ -28,6 +28,7 @@ class CongratsScreen < Screen
     Utils.clear_screen args, 5, 33, 55, 255
     @cam.render_text args, "Congrats!", "fonts/m5x7.ttf", 12.66666 * 1.5, WIDTH / 2, HEIGHT / 2, 255, 255, 255, 255, 1, 1
     @buttons.each { |b| b.render args, @cam }
+    @cam.flush args
   end
 
 end

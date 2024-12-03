@@ -107,6 +107,8 @@ class ShopScreen < Screen
     @cam.render_text args, "SHOP", "fonts/m5x7.ttf", 12.66666 * 1.5, WIDTH / 2, HEIGHT - 20, 255, 255, 255, 255, 1, 1
 
     @buttons.each { |b| b.render args, @cam }
+
+    @cam.flush args
   end
 
 end
