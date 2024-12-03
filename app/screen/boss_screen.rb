@@ -13,6 +13,8 @@ class BossScreen < Screen
     @player.money = (args.state.money ||= 0)
     @player.health = (args.state.health ||= @player.max_health)
     @player.max_health = (args.state.max_health ||= @player.max_health)
+    args.state.lives ||= 3
+    @death_time = 0
 
     @cloudx = 0
 
@@ -79,12 +81,15 @@ class BossScreen < Screen
     # handle input
     mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
     if @event_index == 10
-      @player.left = args.inputs.left
-      @player.right = args.inputs.right
-      @player.drop if args.inputs.down
-      @player.jump if args.inputs.up
-      @player.look_at mx, my
-      @player.fire if args.inputs.mouse.button_left
+      if !@player.dead?
+        @player.left = args.inputs.left
+        @player.right = args.inputs.right
+        @player.drop if args.inputs.down
+        @player.jump if args.inputs.up
+        mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
+        @player.look_at mx, my
+        @player.fire if args.inputs.mouse.button_left
+      end
     end
 
     if args.state.debug
@@ -143,8 +148,21 @@ class BossScreen < Screen
     end
 
     # update player
-    @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
-    args.state.sm.replace BossScreen.new args, @map_id if @player.health <= 0
+    if @player.dead?
+      @death_time += 1
+      if @death_time == 120
+        args.state.lives -= 1
+        if args.state.lives <= 0
+          $gtk.show_cursor
+          args.state.sm.replace GameOverScreen.new args
+        else
+          args.state.sm.replace BossScreen.new args, @map_id
+        end
+      end
+    else
+      @player.look_at mx, my
+      @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
+    end
 
     # update cursor
     @cursor.x = mx
@@ -157,25 +175,29 @@ class BossScreen < Screen
   end
 
   def render args
-    Utils.clear_screen args, 21, 60, 74, 255
+    if @death_time > 0
+      Utils.clear_screen args, 0, 0, 0, 255
+      @player.render args, @cam
+    else
+      Utils.clear_screen args, 21, 60, 74, 255
+      @tiled_map.render args, @cam
+      @boss.render args, @cam, @ui_cam if !@boss.dead?
+      @player.render args, @cam
+      @collectables.each { |c| c.render args, @cam }
+      @bullets.each { |b| b.render args, @cam }
+      @enemy_bullets.each { |b| b.render args, @cam }
+      @particles.each { |p| p.render args, @cam }
 
-    @tiled_map.render args, @cam
-    @boss.render args, @cam, @ui_cam if !@boss.dead?
-    @player.render args, @cam
-    @collectables.each { |c| c.render args, @cam }
-    @bullets.each { |b| b.render args, @cam }
-    @enemy_bullets.each { |b| b.render args, @cam }
-    @particles.each { |p| p.render args, @cam }
+      @ui.render args, @ui_cam
+      @ui_cam.flush args
 
-    @ui.render args, @ui_cam
-    @ui_cam.flush args
+      @cursor.render args, @cam if @event_index == 10
+      @cam.flush args
 
-    @cursor.render args, @cam if @event_index == 10
-    @cam.flush args
-
-    if args.state.debug
-      color = BLACK
-      args.outputs.labels << { text: "enemy bullet count #{@enemy_bullets.size}", x: 10, y: args.grid.h - 260, **color }
+      if args.state.debug
+        color = BLACK
+        args.outputs.labels << { text: "enemy bullet count #{@enemy_bullets.size}", x: 10, y: args.grid.h - 260, **color }
+      end
     end
   end
 

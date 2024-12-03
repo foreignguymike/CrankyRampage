@@ -1,7 +1,7 @@
 class Player < Entity
 
   attr_accessor :money
-  attr_reader :gun
+  attr_reader :gun, :dead_time
 
   INVULNERABILITY_TIME = 2 * 60
 
@@ -15,6 +15,7 @@ class Player < Entity
     @fire_time = 0
     @max_speed = 120 / 60
     @hit_time = 0
+    @dead_time = 0
     @jump_speed = 250 / 60
     @stagger = false
     @mx = @my = 0
@@ -100,6 +101,11 @@ class Player < Entity
 
   def render args, cam
 
+    # dead
+    if dead?
+      @dead_time += 1
+    end
+
     # direction
     @hflip = @rad < -PI / 2 || @rad > PI / 2
 
@@ -107,22 +113,28 @@ class Player < Entity
     @hide = @hit_time > 0 && @hit_time % 10 < 5
 
     # render legs
-    if !@on_ground
-      set_image args, "playerjump"
-    elsif @left || @right
-      index = 1.frame_index(8, 4, true)
-      if (@right && @hflip) || (@left && !@hflip)
-        set_image_index args, "playerwalk", 7 - index, @w
+    if @dead_time <= 60
+      if dead?
+        set_image args, "playeridle"
+      elsif !@on_ground
+        set_image args, "playerjump"
+      elsif @left || @right
+        index = 1.frame_index(8, 4, true)
+        if (@right && @hflip) || (@left && !@hflip)
+          set_image_index args, "playerwalk", 7 - index, @w
+        else
+          set_image_index args, "playerwalk", index, @w
+        end
       else
-        set_image_index args, "playerwalk", index, @w
+        set_image args, "playeridle"
       end
-    else
-      set_image args, "playeridle"
+      cam.render args, self
     end
-    cam.render args, self
 
     # render direction
-    if @rad > 3 * PI / 8 && @rad < 5 * PI / 8
+    if dead? && @dead_time > 60
+      set_image args, "playerdead"
+    elsif @rad > 3 * PI / 8 && @rad < 5 * PI / 8
       set_image args, "playerup"
     elsif @rad < -3 * PI / 8 && @rad > -5 * PI / 8
       set_image args, "playerdown"

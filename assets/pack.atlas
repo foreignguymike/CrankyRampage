@@ -12,7 +12,7 @@ bounds:1226,190,50,50
 bosssquat
 bounds:1162,122,50,50
 bulletsprites
-bounds:1272,249,15,5
+bounds:874,12,15,5
 clouds
 bounds:324,74,320,180
 cursor
@@ -20,7 +20,7 @@ bounds:822,11,27,27
 emerald
 bounds:968,242,288,12
 enemyhealthbaroutline
-bounds:894,35,15,3
+bounds:1272,251,15,3
 energygate
 bounds:968,76,192,96
 energygatesource
@@ -34,7 +34,7 @@ bounds:2,2,12,10
 gunflash
 bounds:822,2,21,7
 headhud
-bounds:872,21,20,17
+bounds:901,21,20,17
 heartempty
 bounds:708,2,11,9
 heartfull
@@ -48,9 +48,11 @@ bounds:1258,242,12,12
 mountains
 bounds:2,14,320,240
 pistol
-bounds:968,67,10,7
+bounds:955,65,10,7
 pixel
 bounds:845,8,1,1
+playerdead
+bounds:851,19,27,19
 playerdown
 bounds:654,13,32,32
 playerdownright
@@ -90,6 +92,6 @@ bounds:1226,174,9,14
 weaponshud
 bounds:1214,120,13,52
 yoyo
-bounds:851,19,19,19
+bounds:880,19,19,19
 yoyoeye
-bounds:955,65,11,7
+bounds:1272,242,11,7
