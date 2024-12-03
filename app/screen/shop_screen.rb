@@ -22,7 +22,7 @@ class ShopScreen < Screen
         @money -= @add_heart_cost
         @add_heart_cost = (@max_health - 2) * 50
         add_heart.text = "+1 Heart - #{@add_heart_cost}"
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << add_heart
@@ -31,35 +31,35 @@ class ShopScreen < Screen
       if @money >= 10 && @health < @max_health
         @health = @max_health
         @money -= 10
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Machine Gun - 200", WIDTH / 2, 100, 110, 13) {
       if @money >= 200 && @gun != "machinegun"
         @gun = "machinegun"
         @money -= 200
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Triplet - 200", WIDTH / 2, 85, 110, 13) {
       if @money >= 200 && @gun != "triplet"
         @gun = "triplet"
         @money -= 200
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Spreader - 200", WIDTH / 2, 70, 110, 13) {
       if @money >= 200 && @gun != "spreader"
         @gun = "spreader"
         @money -= 200
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Beam - 400", WIDTH / 2, 55, 110, 13) {
       if @money >= 400 && @gun != "beam"
         @gun = "beam"
         @money -= 400
-        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
+        args.audio[:sfx] = { input: "sounds/select.ogg", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Exit", WIDTH / 2, 20, 50, 15) {

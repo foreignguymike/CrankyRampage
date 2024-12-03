@@ -45,13 +45,20 @@ class Player < Entity
     @dy = 80 / 60
     @stagger = true
     @health -= damage
-    args.audio[:psfx] = { input: "sounds/hit.wav", gain: 0.7, looping: false }
+    args.audio[:psfx] = { input: "sounds/hit.ogg", gain: 0.7, looping: false }
   end
 
   private def check_input
     # input
     if @left then @dx = (@dx - ACCEL).clamp(-@max_speed, 0) end
     if @right then @dx = (@dx + ACCEL).clamp(0, @max_speed) end
+  end
+
+  def jump args
+    if @on_ground
+      @dy = @jump_speed
+      args.audio[:psfx] = { input: "sounds/jump.ogg", gain: 0.3, looping: false }
+    end
   end
 
   def update args, walls, enemies, enemy_bullets, collectables
@@ -82,7 +89,7 @@ class Player < Entity
     collectables.each { |c|
       if Utils.overlaps? c.crect, crect
         @money += c.value
-        args.audio[:csfx] = { input: "sounds/gem.wav", gain: 0.4, looping: false }
+        args.audio[:csfx] = { input: "sounds/gem.ogg", gain: 0.4, looping: false }
         c.remove = true
       end
       if (@x - c.x).abs < @magnet_range && (@y - c.y).abs < @magnet_range

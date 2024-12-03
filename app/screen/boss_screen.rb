@@ -31,8 +31,8 @@ class BossScreen < Screen
     @boss = Boss.new @tiled_map.map_width - 46, @tiled_map.map_height * 3, @player, @tiled_map.walls.select { |w| !w.platform }
     @enemies << @boss
 
-    # play music
-    # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
+    args.audio[:music] = nil
+
   end
 
   private def map_file_from_map_id
@@ -43,7 +43,7 @@ class BossScreen < Screen
   end
 
   # scripted events
-  private def update_event
+  private def update_event args
     case @event_index
     when 0
       # boss drop
@@ -62,6 +62,7 @@ class BossScreen < Screen
         @cam.look_at x, y + shake
       else
         @event_index = 2
+        args.audio[:music] = { input: "music/level1boss.mp3", gain: 0.7, looping: true }
         @event_time = 0
       end
     when 2
@@ -86,7 +87,7 @@ class BossScreen < Screen
         @player.left = args.inputs.left
         @player.right = args.inputs.right
         @player.drop if args.inputs.down
-        @player.jump if args.inputs.up
+        @player.jump args if args.inputs.up
         mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
         @player.look_at mx, my
         @player.fire if args.inputs.mouse.button_left
@@ -112,6 +113,9 @@ class BossScreen < Screen
 
     # update boss
     @boss.update args, @bullets, @enemy_bullets, @particles
+    if @boss.exploding?
+      args.audio[:music] = nil
+    end
     if @boss.dead?
       finish args
       return
@@ -150,6 +154,7 @@ class BossScreen < Screen
 
     # update player
     if @player.dead?
+      args.audio[:music] = nil
       @death_time += 1
       if @death_time == 120
         args.state.lives -= 1
@@ -171,7 +176,7 @@ class BossScreen < Screen
     @cursor.update
 
     # update event
-    update_event
+    update_event args
 
   end
 

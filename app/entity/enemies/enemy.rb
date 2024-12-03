@@ -21,7 +21,7 @@ class Enemy < Entity
         if @health <= 0
           @remove = true
         end
-        args.audio[:esfx] = { input: "sounds/enemyhit.wav", gain: 1, looping: false }
+        args.audio[:esfx] = { input: "sounds/enemyhit.ogg", gain: 1, looping: false }
       end
     }
     @flash_time -= 1

@@ -58,7 +58,7 @@ class Gun
       dx /= len
       dy /= len
       bx = x + offset * dx
-      by = y + offset * dy - 1
+      by = @bullet == "wave" ? y : y + offset * dy - 1
       @add_bullet.call args, (Bullet.new args, @bullet, bx, by, @speed * dx, @speed * dy, tdeg), @bullet != "beam"
       deg += angle_per_bullet
     }

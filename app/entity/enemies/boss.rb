@@ -37,6 +37,14 @@ class Boss < Enemy
     @health <= @max_health / 2 && !@phase2
   end
 
+  def dead?
+    @state == DEAD
+  end
+
+  def exploding?
+    @state == EXPLODING
+  end
+
   private def set_new_state state
     @state_time = 0
     @state = state
@@ -115,7 +123,7 @@ class Boss < Enemy
         if @state_time % 3 == 0
           particles << (Particle.new "explosion", @x + rand(@cw) - @cw / 2, @y + rand(@ch) - @ch / 2, 32, 32, 0, 0, 8, 3, true)
         end
-        args.audio[:esfx] = { input: "sounds/explode.wav", gain: 0.4, looping: false } if @state_time % 10 == 0
+        args.audio[:esfx] = { input: "sounds/explode.ogg", gain: 0.4, looping: false } if @state_time % 10 == 0
       end
       set_new_state DEAD if @state_time == 301
     else
@@ -156,7 +164,7 @@ class Boss < Enemy
         next if b.remove
         if Utils.overlaps? b.crect, rect
           b.remove = true
-        args.audio[:esfx] = { input: "sounds/gem.wav", gain: 0.4, looping: false }
+        args.audio[:esfx] = { input: "sounds/gem.ogg", gain: 0.4, looping: false }
         end
       }
       return
@@ -169,7 +177,7 @@ class Boss < Enemy
       if @shield
         if Utils.overlaps? bcrect, @guard_hit_box
           b.remove = true
-          args.audio[:esfx] = { input: "sounds/gem.wav", gain: 0.4, looping: false }
+          args.audio[:esfx] = { input: "sounds/gem.ogg", gain: 0.4, looping: false }
         end
       end
       if Utils.overlaps? b.crect, hit_box
@@ -180,17 +188,13 @@ class Boss < Enemy
         if @health <= 0
           @remove = true
         end
-        args.audio[:esfx] = { input: "sounds/enemyhit.wav", gain: 1, looping: false }
+        args.audio[:esfx] = { input: "sounds/enemyhit.ogg", gain: 1, looping: false }
       end
     }
     @flash_time -= 1
     if @flash_time <= 0
       @flash = false
     end
-  end
-
-  def dead?
-    @state == DEAD
   end
 
   def update args, bullets, enemy_bullets, particles
@@ -232,7 +236,7 @@ class Boss < Enemy
     end
     cam.render args, self
     cam.render_image args, (args.state.assets.find "bossshield"), @x, @y, 50, 50 if @shield
-    w = 160
+    w = 130
     w2 = (w - 2) * @health / @max_health
     ui_cam.render_box args, WIDTH / 2, HEIGHT - 8, w, 4, 0, 0, 0
     ui_cam.render_box args, WIDTH / 2 - (w - w2) / 2 + 1, HEIGHT - 8, w2, 2, 198, 216, 49
