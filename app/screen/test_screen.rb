@@ -89,8 +89,8 @@ class TestScreen < Screen
       elsif args.inputs.keyboard.key_down.five
         @player.set_gun Gun::Beam.new add_bullet
       end
-      if args.inputs.keyboard.key_down.r || @player.health <= 0
-        args.state.sm.replace TestScreen.new args
+      if args.inputs.keyboard.key_down.r
+        args.state.sm.replace TestScreen.new args, @map_id
       end
     end
 
@@ -177,7 +177,7 @@ class TestScreen < Screen
 
   def render args
     start_time = Time.now
-    Utils.clear_screen args, 20, 20, 40, 255
+    Utils.clear_screen args, 21, 60, 74, 255
     if @map_id == "level1-1"
       @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
       @cloudx = (@cloudx + 0.04) % WIDTH
@@ -201,8 +201,8 @@ class TestScreen < Screen
 
     @cursor.render args, @cam
 
-    @render_time = Time.now - start_time
     @cam.flush args
+    @render_time = Time.now - start_time
     @frame_time = Time.now - @start_time
 
     # debug text

@@ -59,7 +59,7 @@ class Gun
       dy /= len
       bx = x + offset * dx
       by = y + offset * dy - 1
-      @add_bullet.call args, (Bullet.new args, @bullet, bx, by, @speed * dx, @speed * dy, tdeg)
+      @add_bullet.call args, (Bullet.new args, @bullet, bx, by, @speed * dx, @speed * dy, tdeg), @bullet != "beam"
       deg += angle_per_bullet
     }
   end

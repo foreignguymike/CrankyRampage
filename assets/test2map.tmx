@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="98">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="110">
  <tileset firstgid="1" source="ship.tsx"/>
  <layer id="1" name="map" width="140" height="12">
   <data encoding="csv">
@@ -67,7 +67,7 @@
   <object id="17" name="sneaky" x="1416" y="128">
    <ellipse/>
   </object>
-  <object id="18" name="sneaky" x="1584" y="128">
+  <object id="18" name="sneaky" x="1576" y="128">
    <ellipse/>
   </object>
   <object id="19" name="slimer" x="1744" y="144">
@@ -109,16 +109,16 @@
   <object id="68" name="amber" x="1120" y="160">
    <ellipse/>
   </object>
-  <object id="69" name="amber" x="800" y="64">
+  <object id="69" name="emerald" x="800" y="64">
    <ellipse/>
   </object>
-  <object id="70" name="amber" x="816" y="64">
+  <object id="70" name="emerald" x="816" y="64">
    <ellipse/>
   </object>
-  <object id="71" name="amber" x="784" y="64">
+  <object id="71" name="emerald" x="784" y="64">
    <ellipse/>
   </object>
-  <object id="72" name="amber" x="832" y="64">
+  <object id="72" name="emerald" x="832" y="64">
    <ellipse/>
   </object>
   <object id="73" name="amber" x="704" y="96">
@@ -188,6 +188,33 @@
    <properties>
     <property name="walls" value="23,63,96"/>
    </properties>
+   <ellipse/>
+  </object>
+  <object id="98" name="emerald" x="1856" y="144">
+   <ellipse/>
+  </object>
+  <object id="99" name="emerald" x="1856" y="128">
+   <ellipse/>
+  </object>
+  <object id="100" name="emerald" x="1856" y="112">
+   <ellipse/>
+  </object>
+  <object id="102" name="sapphire" x="1296" y="32">
+   <ellipse/>
+  </object>
+  <object id="103" name="emerald" x="1312" y="32">
+   <ellipse/>
+  </object>
+  <object id="104" name="emerald" x="1328" y="32">
+   <ellipse/>
+  </object>
+  <object id="105" name="emerald" x="1344" y="32">
+   <ellipse/>
+  </object>
+  <object id="106" name="amber" x="544" y="96">
+   <ellipse/>
+  </object>
+  <object id="107" name="amber" x="560" y="96">
    <ellipse/>
   </object>
  </objectgroup>

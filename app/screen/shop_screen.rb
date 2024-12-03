@@ -74,7 +74,10 @@ class ShopScreen < Screen
     args.state.max_health = @max_health
     args.state.money = @money
     args.state.gun = @gun
-    args.state.sm.replace TestScreen.new args, @map_id
+    case @map_id
+    when "level1-1", "level1-2" then args.state.sm.replace TestScreen.new args, @map_id
+    when "boss1" then args.state.sm.replace BossScreen.new args, @map_id
+    end
   end
 
   def update args

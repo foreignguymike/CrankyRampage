@@ -9,10 +9,10 @@ class Enemy < Entity
     @walls = []
   end
 
-  def check_bullets args, bullets
+  def check_bullets args, bullets, rect = crect
     bullets.each { |b|
       next if b.remove
-      if Utils.overlaps? b.crect, crect
+      if Utils.overlaps? b.crect, rect
         b.remove = true
         @health -= b.damage
         @flash = true
