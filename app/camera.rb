@@ -11,6 +11,12 @@ class Camera
     @y = 0
     @render_count = 0
     set_size SCREEN_WIDTH, SCREEN_HEIGHT
+    @batch = []
+  end
+
+  def flush args
+    args.outputs.sprites << @batch
+    @batch.clear
   end
 
   def set_size w, h

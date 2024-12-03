@@ -6,6 +6,7 @@ class Enemy < Entity
     super()
     @x = x
     @y = y
+    @walls = []
   end
 
   def check_bullets args, bullets

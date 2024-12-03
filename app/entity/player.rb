@@ -81,7 +81,7 @@ class Player < Entity
     collectables.each { |c|
       if Utils.overlaps? c.crect, crect
         @money += c.value
-        args.audio[:csfx] = { input: "sounds/gem.wav", gain: 0.7, looping: false }
+        args.audio[:csfx] = { input: "sounds/gem.wav", gain: 0.4, looping: false }
         c.remove = true
       end
       if (@x - c.x).abs < @magnet_range && (@y - c.y).abs < @magnet_range

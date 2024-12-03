@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="97">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="98">
  <tileset firstgid="1" source="ship.tsx"/>
  <layer id="1" name="map" width="140" height="12">
   <data encoding="csv">
@@ -19,16 +19,31 @@
  </layer>
  <objectgroup id="4" name="entities">
   <object id="6" name="yoyo" x="2128" y="60"/>
-  <object id="7" name="slimer" x="192" y="160"/>
-  <object id="8" name="slimer" x="272" y="160"/>
-  <object id="9" name="slimer" x="352" y="160"/>
-  <object id="10" name="slimer" x="592" y="160">
-   <ellipse/>
+  <object id="7" name="slimer" x="192" y="160">
+   <properties>
+    <property name="walls" value="23,24,25"/>
+   </properties>
   </object>
-  <object id="11" name="slimer" x="752" y="160">
+  <object id="8" name="slimer" x="272" y="160">
+   <properties>
+    <property name="walls" value="23,25,26"/>
+   </properties>
+  </object>
+  <object id="9" name="slimer" x="352" y="160">
+   <properties>
+    <property name="walls" value="23,26,27"/>
+   </properties>
+  </object>
+  <object id="10" name="slimer" x="592" y="160">
+   <properties>
+    <property name="walls" value="23,63,96"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="12" name="slimer" x="864" y="160">
+   <properties>
+    <property name="walls" value="23,33,96"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="13" name="yoyo" x="1008" y="44">
@@ -38,9 +53,15 @@
    <ellipse/>
   </object>
   <object id="15" name="slimer" x="1072" y="160">
+   <properties>
+    <property name="walls" value="23,33,34"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="16" name="slimer" x="1232" y="160">
+   <properties>
+    <property name="walls" value="23,34,35"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="17" name="sneaky" x="1416" y="128">
@@ -50,6 +71,9 @@
    <ellipse/>
   </object>
   <object id="19" name="slimer" x="1744" y="144">
+   <properties>
+    <property name="walls" value="35,39,41"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="20" name="yoyo" x="1904" y="12">
@@ -67,7 +91,7 @@
   <object id="54" name="sapphire" x="912" y="32">
    <ellipse/>
   </object>
-  <object id="61" name="player" x="1195" y="108">
+  <object id="61" name="player" x="40.5" y="151">
    <ellipse/>
   </object>
   <object id="64" name="emerald" x="1040" y="64">
@@ -158,6 +182,12 @@
    <ellipse/>
   </object>
   <object id="93" name="amber" x="1936" y="32">
+   <ellipse/>
+  </object>
+  <object id="97" name="slimer" x="736" y="160">
+   <properties>
+    <property name="walls" value="23,63,96"/>
+   </properties>
    <ellipse/>
   </object>
  </objectgroup>

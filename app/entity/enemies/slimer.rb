@@ -1,6 +1,6 @@
 class Slimer < Enemy
 
-  def initialize x, y
+  def initialize x, y, walls
     super x, y
     @max_speed = 40 / 60
     @cw = @ch = 15
@@ -12,14 +12,15 @@ class Slimer < Enemy
     @ch = 10
     @cyo = -11
     @animation = Animation.new 4, 5
+    @walls = walls
   end
 
-  def update args, player, walls, bullets, enemy_bullets
+  def update args, player, bullets, enemy_bullets
     if @wx != nil
       @max_speed = -@max_speed
       @dx = @max_speed
     end
-    apply_physics walls, false
+    apply_physics @walls, false
     @x += @dx
     @y += @dy
     

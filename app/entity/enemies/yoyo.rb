@@ -1,6 +1,6 @@
 class Yoyo < Enemy
 
-  def initialize x, y
+  def initialize x, y, walls
     super x, y
     @max_speed = 60 / 60
     @cw = @ch = 15
@@ -10,10 +10,11 @@ class Yoyo < Enemy
     @attacking = false
     @retreating = false
     @original_y = y
+    @walls = walls
   end
 
-  def update args, player, walls, bullets, enemy_bullets
-    wall = walls.find { |w|
+  def update args, player, bullets, enemy_bullets
+    wall = @walls.find { |w|
       if w.platform then next end
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y)
     }

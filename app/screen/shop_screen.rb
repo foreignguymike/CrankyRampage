@@ -1,9 +1,9 @@
 class ShopScreen < Screen
 
-  def initialize args, next_screen
+  def initialize args, map_id
     super()
 
-    @next_screen = next_screen
+    @map_id = map_id
 
     @money = args.state.money
     @health = args.state.health
@@ -23,6 +23,7 @@ class ShopScreen < Screen
         @money -= @add_heart_cost
         @add_heart_cost = (@max_health - 2) * 50
         add_heart.text = "+1 Heart - #{@add_heart_cost}"
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << add_heart
@@ -31,30 +32,35 @@ class ShopScreen < Screen
       if @money >= 10 && @health < @max_health
         @health = @max_health
         @money -= 10
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Machine Gun - 200", WIDTH / 2, 100, 110, 15) {
       if @money >= 200 && @gun != "machinegun"
         @gun = "machinegun"
         @money -= 200
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Triplet - 200", WIDTH / 2, 85, 110, 15) {
       if @money >= 200 && @gun != "triplet"
         @gun = "triplet"
         @money -= 200
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Spreader - 200", WIDTH / 2, 70, 110, 15) {
       if @money >= 200 && @gun != "spreader"
         @gun = "spreader"
         @money -= 200
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Beam - 400", WIDTH / 2, 55, 110, 15) {
       if @money >= 400 && @gun != "beam"
         @gun = "beam"
         @money -= 400
+        args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
     @buttons << Button.new("Exit", WIDTH / 2, 20, 50, 15) {
@@ -68,12 +74,7 @@ class ShopScreen < Screen
     args.state.max_health = @max_health
     args.state.money = @money
     args.state.gun = @gun
-    args.state.sm.replace TestScreen.new args
-    case @next_screen
-    when "test2" then args.state.sm.replace Test2Screen.new args
-    when "boss" then args.state.sm.replace BossScreen.new args
-    else args.state.sm.replace TestScreen.new args
-    end
+    args.state.sm.replace TestScreen.new args, @map_id
   end
 
   def update args

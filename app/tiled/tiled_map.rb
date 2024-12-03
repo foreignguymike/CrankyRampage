@@ -1,6 +1,6 @@
 class TiledMap
 
-  attr_reader :map_width, :map_height
+  attr_reader :map_width, :map_height, :map_rows, :map_cols
 
   attr_reader :walls
   attr_reader :p
@@ -34,7 +34,7 @@ class TiledMap
             y = w["y"].to_i
             width = w["width"].to_i
             height = w["height"].to_i
-            @walls << { **(Utils.center_rect x, @map_height - y - height, width, height), platform: name == "platforms" }
+            @walls << { **(Utils.center_rect x, @map_height - y - height, width, height), platform: name == "platforms", id: w["id"].to_i }
           }
         when "entities"
           entities = c[:children].each { |e|
@@ -43,7 +43,8 @@ class TiledMap
             when "player"
               @p = { x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
             else
-              @entities << { name: attrs["name"], x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i }
+              wall_ids = e.dig(:children, 0, :children, 0, :attributes, "value")&.split(",")&.map(&:to_i) || []
+              @entities << { name: attrs["name"], x: attrs["x"].to_i, y: @map_height - attrs["y"].to_i, wall_ids: wall_ids }
             end
           }
         end

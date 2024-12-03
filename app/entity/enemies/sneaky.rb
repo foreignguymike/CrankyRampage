@@ -1,5 +1,5 @@
 class Sneaky < Enemy
-  def initialize x, y
+  def initialize x, y, walls
     super x, y
     @max_speed = 60 / 60
     @cw = @ch = 15
@@ -10,9 +10,10 @@ class Sneaky < Enemy
     @attacking = false
     @original_y = y
     @interval = 0
+    @walls = walls
   end
 
-  def update args, player, walls, bullets, enemy_bullets
+  def update args, player, bullets, enemy_bullets
     @hflip = player.x < @x
     @interval -= 1
 
@@ -23,7 +24,7 @@ class Sneaky < Enemy
     end
 
     old_dy = @dy
-    apply_physics walls, false, false
+    apply_physics @walls, false, false
     new_dy = @dy
     @y += @dy
 

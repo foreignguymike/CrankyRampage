@@ -1,9 +1,10 @@
 class TestScreen < Screen
 
-  def initialize args
+  def initialize args, map_id
     super()
 
-    @tiled_map = TiledMap.new "assets/testmap.tmx"
+    @map_id = map_id
+    @tiled_map = TiledMap.new map_file_from_map_id
 
     @player = Player.new
     @player.x = @tiled_map.p.x
@@ -28,17 +29,34 @@ class TestScreen < Screen
     # args.audio[:music] = { input: "music/meadow.mp3", gain: 1, looping: true }
   end
 
+  private def map_file_from_map_id
+    return case @map_id
+    when "level1-1" then "assets/testmap.tmx"
+    when "level1-2" then "assets/test2map.tmx"
+    when "boss1" then "assets/bossmap.tmx"
+    else raise ArgumentError "unknown map id #{@map_id}"
+    end
+  end
+
+  private def next_map_id
+    return case @map_id
+    when "level1-1" then "level1-2"
+    when "level1-2" then "boss1"
+    end
+  end
+
   private def parse_map
     @tiled_map.entities.each { |e|
       case e.name
       when "amber", "emerald", "sapphire", "ruby"
         @collectables << (Gem.new e.name, e.x, e.y, 0, 0)
       when "yoyo"
-        @enemies << (Yoyo.new e.x, e.y)
+        @enemies << (Yoyo.new e.x, e.y, @tiled_map.walls)
       when "slimer"
-        @enemies << (Slimer.new e.x, e.y)
+        puts "found slimer #{e}"
+        @enemies << (Slimer.new e.x, e.y, @tiled_map.walls.select { |w| e.wall_ids.include? w.id })
       when "sneaky"
-        @enemies << (Sneaky.new e.x, e.y)
+        @enemies << (Sneaky.new e.x, e.y, @tiled_map.walls)
       end
     }
   end
@@ -49,7 +67,7 @@ class TestScreen < Screen
     args.state.max_health = @player.max_health
     args.state.money = @player.money
     args.state.gun = @player.gun.class.name.downcase
-    args.state.sm.replace ShopScreen.new args, "test2"
+    args.state.sm.replace ShopScreen.new args, next_map_id
   end
 
   def update args
@@ -83,7 +101,7 @@ class TestScreen < Screen
     # update enemies
     start_time = Time.now
     @enemies.reject! { |e| 
-      e.update args, @player, @tiled_map.walls, @bullets, @enemy_bullets
+      e.update args, @player, @bullets, @enemy_bullets
       if e.health <= 0
         @particles << (Particle.new "explosion", e.x, e.y + 7, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
@@ -133,13 +151,17 @@ class TestScreen < Screen
     @enemy_bullet_update_time = Time.now - start_time
 
     # cam follow player
-    @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
+    if @tiled_map.map_rows <= 12
+      @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), HEIGHT / 2, 0.08
+    else
+      @cam.look_at (@player.x.clamp WIDTH / 2, @tiled_map.map_width - WIDTH / 2), (@player.y.clamp HEIGHT / 2, @tiled_map.map_height - HEIGHT / 2), 0.08
+    end
 
     # update player
     @player.look_at mx, my
     start_time = Time.now
     @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
-    args.state.sm.replace TestScreen.new args if @player.health <= 0
+    args.state.sm.replace TestScreen.new args, @map_id if @player.health <= 0
     @player_update_time = Time.now - start_time
 
     # update cursor
@@ -154,13 +176,17 @@ class TestScreen < Screen
   end
 
   def render args
+    start_time = Time.now
     Utils.clear_screen args, 20, 20, 40, 255
-    @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
-    @cloudx = (@cloudx + 0.04) % WIDTH
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 10, WIDTH, HEIGHT
-    @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30 - @cam.y / 20, WIDTH, HEIGHT
+    if @map_id == "level1-1"
+      @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
+      @cloudx = (@cloudx + 0.04) % WIDTH
+      @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx + WIDTH, HEIGHT / 2 - 25, WIDTH, HEIGHT
+      @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx, HEIGHT / 2 - 25, WIDTH, HEIGHT
+      @ui_cam.render_image args, (args.state.assets.find "clouds"), @cloudx - WIDTH, HEIGHT / 2 - 25, WIDTH, HEIGHT
+      @ui_cam.render_image args, (args.state.assets.find "mountains"), WIDTH / 2, HEIGHT / 2 - 30 - @cam.y / 20, WIDTH, HEIGHT
+    end
+    @ui_cam.flush args
 
     @player.render args, @cam
     @enemies.each { |e| e.render args, @cam }
@@ -171,9 +197,12 @@ class TestScreen < Screen
     @particles.each { |p| p.render args, @cam }
 
     @ui.render args, @ui_cam
+    @ui_cam.flush args
 
     @cursor.render args, @cam
 
+    @render_time = Time.now - start_time
+    @cam.flush args
     @frame_time = Time.now - @start_time
 
     # debug text
@@ -184,12 +213,13 @@ class TestScreen < Screen
       args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 240, **color }
       args.outputs.labels << { text: "entity count #{@collectables.size + @enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 260, **color }
       args.outputs.labels << { text: "Frame time: #{(1000 * @frame_time).round(0)}ms", x: 10, y: args.grid.h - 300, **color }
-      args.outputs.labels << { text: "Enemy time: #{(1000 * @enemy_update_time).round(0)}ms", x: 10, y: args.grid.h - 320, **color }
-      args.outputs.labels << { text: "Collectable time: #{(1000 * @collectable_update_time).round(0)}ms", x: 10, y: args.grid.h - 340, **color }
-      args.outputs.labels << { text: "Particle time: #{(1000 * @particle_update_time).round(0)}ms", x: 10, y: args.grid.h - 360, **color }
-      args.outputs.labels << { text: "Bullet time: #{(1000 * @bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 380, **color }
-      args.outputs.labels << { text: "Enemy Bullet time: #{(1000 * @enemy_bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
-      args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 420, **color }
+      args.outputs.labels << { text: "Render time: #{(1000 * @frame_time).round(0)}ms", x: 10, y: args.grid.h - 320, **color }
+      args.outputs.labels << { text: "Enemy time: #{(1000 * @enemy_update_time).round(0)}ms", x: 10, y: args.grid.h - 340, **color }
+      args.outputs.labels << { text: "Collectable time: #{(1000 * @collectable_update_time).round(0)}ms", x: 10, y: args.grid.h - 360, **color }
+      args.outputs.labels << { text: "Particle time: #{(1000 * @particle_update_time).round(0)}ms", x: 10, y: args.grid.h - 380, **color }
+      args.outputs.labels << { text: "Bullet time: #{(1000 * @bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
+      args.outputs.labels << { text: "Enemy Bullet time: #{(1000 * @enemy_bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 420, **color }
+      args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 440, **color }
       args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **color }
     end
   end

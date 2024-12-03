@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="83" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="298">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="40" height="83" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="301">
  <tileset firstgid="1" source="ship.tsx"/>
  <layer id="1" name="map" width="40" height="83">
   <data encoding="csv">
@@ -137,22 +137,34 @@
   <object id="106" name="amber" x="176" y="1296">
    <ellipse/>
   </object>
-  <object id="107" name="slimer" x="105" y="1178.5">
+  <object id="107" name="slimer" x="96" y="1184">
+   <properties>
+    <property name="walls" value="86,116,248"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="108" name="slimer" x="187" y="1181">
+  <object id="108" name="slimer" x="192" y="1184">
+   <properties>
+    <property name="walls" value="86,248,249"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="109" name="slimer" x="345.5" y="1177">
+  <object id="109" name="slimer" x="352" y="1184">
+   <properties>
+    <property name="walls" value="86,249,250"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="110" name="slimer" x="442" y="1182">
+  <object id="110" name="slimer" x="448" y="1184">
+   <properties>
+    <property name="walls" value="86,250,251"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="128" name="slimer" x="258" y="1006.67">
-   <ellipse/>
-  </object>
-  <object id="129" name="slimer" x="433.638" y="1005.58">
+  <object id="128" name="slimer" x="256" y="1008">
+   <properties>
+    <property name="walls" value="139,141,142"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="130" name="amber" x="208" y="912">
@@ -266,10 +278,10 @@
   <object id="221" name="yoyo" x="256" y="300">
    <ellipse/>
   </object>
-  <object id="222" name="slimer" x="417.833" y="382.5">
-   <ellipse/>
-  </object>
-  <object id="223" name="slimer" x="496.5" y="382.83">
+  <object id="222" name="slimer" x="432" y="384">
+   <properties>
+    <property name="walls" value="220,232,236"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="224" name="emerald" x="592" y="384">
@@ -290,16 +302,22 @@
   <object id="229" name="amber" x="320" y="336">
    <ellipse/>
   </object>
-  <object id="243" name="slimer" x="198.5" y="767.5">
+  <object id="244" name="slimer" x="384" y="768">
+   <properties>
+    <property name="walls" value="144,149,150,198"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="244" name="slimer" x="369.5" y="768.5">
+  <object id="245" name="slimer" x="480" y="640">
+   <properties>
+    <property name="walls" value="195,196,246"/>
+   </properties>
    <ellipse/>
   </object>
-  <object id="245" name="slimer" x="480" y="635">
-   <ellipse/>
-  </object>
-  <object id="247" name="slimer" x="243.5" y="382.5">
+  <object id="247" name="slimer" x="240" y="384">
+   <properties>
+    <property name="walls" value="187,199,220,232"/>
+   </properties>
    <ellipse/>
   </object>
   <object id="252" name="yoyo" x="336" y="28">
@@ -380,8 +398,26 @@
   <object id="293" name="sapphire" x="144" y="64">
    <ellipse/>
   </object>
+  <object id="298" name="slimer" x="416" y="1008">
+   <properties>
+    <property name="walls" value="139,141,142"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="299" name="slimer" x="224" y="768">
+   <properties>
+    <property name="walls" value="144,149,150,198"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="300" name="slimer" x="496" y="384">
+   <properties>
+    <property name="walls" value="220,232,236"/>
+   </properties>
+   <ellipse/>
+  </object>
  </objectgroup>
- <objectgroup id="2" name="walls" visible="0">
+ <objectgroup id="2" name="walls">
   <object id="64" x="0" y="1312" width="640" height="16"/>
   <object id="65" x="592" y="1248" width="48" height="64"/>
   <object id="66" x="576" y="1264" width="16" height="48"/>
