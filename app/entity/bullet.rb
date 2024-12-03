@@ -17,7 +17,7 @@ class Bullet < Entity
     when "pistol" then 10
     when "machinegun" then 30
     when "triplet" then 40
-    when "wave" then 25
+    when "wave" then 40
     when "beam" then 10
 
     when "greenslime" then 100
@@ -36,19 +36,34 @@ class Bullet < Entity
     if path == "greenslime"
       @cw = @ch = 4
     end
+
+    @bounce = path == "wave"
+    @gravity = 0 if @bounce
   end
 
   def update walls
-    if !@physics
+    if !@physics && !@bounce
       walls.each { |w|
-        if w.platform then next end
+        next if w.platform
         if Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y)
           @remove = true
         end
       }
     else
-      apply_physics walls, false
-      @remove = true if @wx != nil || @wy != nil
+      apply_physics walls, false, true, @bounce, true
+      @remove = true if (@wx != nil || @wy != nil) && !@bounce
+      if @wx != nil
+        if @render_deg > 90 || @render_deg < -90
+          @render_deg += 2* (90 - @render_deg)
+        elsif @render_deg >= 0
+          @render_deg = 180 - @render_deg
+        else
+          @render_deg = -180 - @render_deg
+        end
+      end
+      if @wy != nil
+        @render_deg = -@render_deg
+      end
     end
 
     @x += @dx

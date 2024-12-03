@@ -5,6 +5,7 @@ require 'app/screen/screen'
 require 'app/screen/test_screen'
 require 'app/screen/shop_screen'
 require 'app/screen/boss_screen'
+require 'app/screen/congrats_screen'
 require 'app/util/utils'
 require 'app/util/texture_atlas_manager'
 require 'app/util/animation'
@@ -32,12 +33,12 @@ def setup_game args, force = false
 
 
   # debug
-  args.state.health = 3
-  args.state.max_health = 3
-  args.state.money = 449
-  args.state.gun = "pistol"
-  args.state.sm.push ShopScreen.new args, "boss1"
-  # args.state.sm.push TestScreen.new args, "level1-1"
+  # args.state.health = 3
+  # args.state.max_health = 3
+  # args.state.money = 449
+  # args.state.gun = "pistol"
+  # args.state.sm.push ShopScreen.new args, "boss1"
+  args.state.sm.push TestScreen.new args, "level1-1"
 end
 
 def tick args

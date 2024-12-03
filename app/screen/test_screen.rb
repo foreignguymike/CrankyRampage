@@ -53,7 +53,6 @@ class TestScreen < Screen
       when "yoyo"
         @enemies << (Yoyo.new e.x, e.y, @tiled_map.walls)
       when "slimer"
-        puts "found slimer #{e}"
         @enemies << (Slimer.new e.x, e.y, @tiled_map.walls.select { |w| e.wall_ids.include? w.id })
       when "sneaky"
         @enemies << (Sneaky.new e.x, e.y, @tiled_map.walls)

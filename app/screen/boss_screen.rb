@@ -71,6 +71,10 @@ class BossScreen < Screen
     end
   end
 
+  def finish args
+    args.state.sm.replace CongratsScreen.new args
+  end
+
   def update args
     # handle input
     mx, my = @cam.from_screen_space args.inputs.mouse.x, args.inputs.mouse.y
@@ -101,7 +105,11 @@ class BossScreen < Screen
     end
 
     # update boss
-    @boss.update args, @bullets, @enemy_bullets
+    @boss.update args, @bullets, @enemy_bullets, @particles
+    if @boss.dead?
+      finish args
+      return
+    end
 
     # update collectables
     @collectables.reject! { |c|
@@ -152,7 +160,7 @@ class BossScreen < Screen
     Utils.clear_screen args, 21, 60, 74, 255
 
     @tiled_map.render args, @cam
-    @boss.render args, @cam, @ui_cam
+    @boss.render args, @cam, @ui_cam if !@boss.dead?
     @player.render args, @cam
     @collectables.each { |c| c.render args, @cam }
     @bullets.each { |b| b.render args, @cam }

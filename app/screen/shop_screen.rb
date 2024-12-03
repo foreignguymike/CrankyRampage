@@ -9,7 +9,6 @@ class ShopScreen < Screen
     @health = args.state.health
     @max_health = args.state.max_health
     @gun = args.state.gun
-    puts "entered shop with gun #{@gun}"
 
     # sanity check
     raise ArgumentError if @money == nil || @health == nil || @max_health == nil || @gun == nil
@@ -108,9 +107,6 @@ class ShopScreen < Screen
     @cam.render_text args, "SHOP", "fonts/m5x7.ttf", 12.66666 * 1.5, WIDTH / 2, HEIGHT - 20, 255, 255, 255, 255, 1, 1
 
     @buttons.each { |b| b.render args, @cam }
-    # @cam.render_text args, "Refill Hearts - 10", "fonts/m5x7.ttf", 12.66666, 40, 130, 255, 255, 255
-    # @cam.render_text args, "+1 Heart - 10", "fonts/m5x7.ttf", 12.66666, 170, 130, 255, 255, 255
-    # @cam.render_text args, "+1 Heart - 10", "fonts/m5x7.ttf", 12.66666, 50, 100, 255, 255, 255
   end
 
 end

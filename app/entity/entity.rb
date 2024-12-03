@@ -77,7 +77,7 @@ class Entity
     if !@right && @dx > 0 then @dx = (@dx - FRICTION).clamp(0, @dx) end
   end
 
-  def apply_physics walls, has_friction = true, check_collision = true, bounce = false
+  def apply_physics walls, has_friction = true, check_collision = true, bounce = false, ignore_platforms = false
     # gravity
     @dy = (@dy - @gravity).clamp(-MAX_FALL_SPEED, 1000)
 
@@ -88,7 +88,7 @@ class Entity
 
     # check collision x
     @wx = walls.find { |w|
-      if w.platform then next end
+      next if w.platform
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x + @dx, @y)
     }
     if @wx
@@ -103,7 +103,7 @@ class Entity
     # check collision y
     @wy = walls.find { |w|
       # check platform, should only collide if we are above the platform and dy < 0
-      next if w.platform && (@dy >= 0 || @y + @cyo - @ch / 2 < w.y + w.h / 2)
+      next if w.platform && (ignore_platforms || (@dy >= 0 || @y + @cyo - @ch / 2 < w.y + w.h / 2))
       Utils.overlaps? ({ x: w.x - w.w / 2, y: w.y - w.h / 2, w: w.w, h: w.h}), (crect @x, @y + @dy)
     }
     @on_ground = false
@@ -122,7 +122,7 @@ class Entity
   end
 
   def render_debug args, cam
-    cam.render_box args, @x + @cxo, @y + @cyo, @cw, @ch, 255, 0, 0, 128
+    cam.render_box args, @x + @cxo, @y + @cyo, @cw, @ch, 255, 0, 0, 64
   end
 
 end

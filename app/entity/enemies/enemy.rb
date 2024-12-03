@@ -1,12 +1,13 @@
 class Enemy < Entity
   
-  attr_reader :gems
+  attr_reader :gems, :can_hit_player
 
   def initialize x, y
     super()
     @x = x
     @y = y
     @walls = []
+    @can_hit_player = true
   end
 
   def check_bullets args, bullets, rect = crect

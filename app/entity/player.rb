@@ -69,7 +69,7 @@ class Player < Entity
       @stagger = false
     end
     if @hit_time < 0
-      enemies.find { |e| Utils.overlaps? e.crect, crect }&.tap { hit args, 1 }
+      enemies.find { |e| e.can_hit_player && (Utils.overlaps? e.crect, crect) }&.tap { hit args, 1 }
     end
 
     # check enemy bullets
