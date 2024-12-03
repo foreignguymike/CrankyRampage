@@ -28,7 +28,7 @@ class TestScreen < Screen
     @ui = UI.new @player
 
     # play music
-    args.audio[:music] = { input: "music/level1.mp3", gain: 0.7, looping: true } if !args.audio[:music]
+    args.audio[:music] = { input: "music/level1.mp3", gain: 0.5, looping: true } if !args.audio[:music]
 
   end
 
@@ -73,7 +73,6 @@ class TestScreen < Screen
   end
 
   def update args
-    @start_time = Time.now
     if !@player.dead?
       @player.left = args.inputs.left
       @player.right = args.inputs.right
@@ -85,7 +84,6 @@ class TestScreen < Screen
     end
 
     # update enemies
-    start_time = Time.now
     @enemies.reject! { |e| 
       e.update args, @player, @bullets, @enemy_bullets
       if e.dead?
@@ -102,39 +100,30 @@ class TestScreen < Screen
       end
       e.remove 
     }
-    @enemy_update_time = Time.now - start_time
 
     # update collectables
-    start_time = Time.now
     @collectables.reject! { |c|
       c.update @tiled_map.walls
       c.remove 
     }
-    @collectable_update_time = Time.now - start_time
 
     # update particles
-    start_time = Time.now
     @particles.reject! { |p|
       p.update
       p.remove
     }
-    @particle_update_time = Time.now - start_time
 
     # update bullets
-    start_time = Time.now
     @bullets.reject! { |b|
       b.update @tiled_map.walls
       b.remove
     }
-    @bullet_update_time = Time.now - start_time
 
     # update enemy bullets
-    start_time = Time.now
     @enemy_bullets.reject! { |b|
       b.update @tiled_map.walls
       b.remove
     }
-    @enemy_bullet_update_time = Time.now - start_time
 
     # cam follow player
     if @tiled_map.map_rows <= 12
@@ -144,7 +133,6 @@ class TestScreen < Screen
     end
 
     # update player
-    start_time = Time.now
     if @player.dead?
       args.audio[:music] = nil
       @death_time += 1
@@ -160,7 +148,6 @@ class TestScreen < Screen
     else
       @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
     end
-    @player_update_time = Time.now - start_time
 
     # update cursor
     @cursor.x = mx
@@ -178,7 +165,6 @@ class TestScreen < Screen
       Utils.clear_screen args, 0, 0, 0, 255
       @player.render args, @cam
     else
-      start_time = Time.now
       Utils.clear_screen args, 21, 60, 74, 255
       if @map_id == "level1-1"
         @ui_cam.render_image args, (args.state.assets.find "sky"), WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT
@@ -204,27 +190,6 @@ class TestScreen < Screen
 
       @cursor.render args, @cam
       @cam.flush args
-      
-      @render_time = Time.now - start_time
-      @frame_time = Time.now - @start_time
-
-      # debug text
-      if args.state.debug
-        color = BLACK
-        args.outputs.labels << { text: "player x, y #{@player.x.round(2)} #{@player.y.round(2)}", x: 10, y: args.grid.h - 200, **color }
-        args.outputs.labels << { text: "player dx, dy #{@player.dx.round(2)} #{@player.dy.round(2)}", x: 10, y: args.grid.h - 220, **color }
-        args.outputs.labels << { text: "cam x, y #{@cam.x.round(2)}, #{@cam.y.round(2)}", x: 10, y: args.grid.h - 240, **color }
-        args.outputs.labels << { text: "entity count #{@collectables.size + @enemies.size + @bullets.size + @particles.size + 2}", x: 10, y: args.grid.h - 260, **color }
-        args.outputs.labels << { text: "Frame time: #{(1000 * @frame_time).round(0)}ms", x: 10, y: args.grid.h - 300, **color }
-        args.outputs.labels << { text: "Render time: #{(1000 * @frame_time).round(0)}ms", x: 10, y: args.grid.h - 320, **color }
-        args.outputs.labels << { text: "Enemy time: #{(1000 * @enemy_update_time).round(0)}ms", x: 10, y: args.grid.h - 340, **color }
-        args.outputs.labels << { text: "Collectable time: #{(1000 * @collectable_update_time).round(0)}ms", x: 10, y: args.grid.h - 360, **color }
-        args.outputs.labels << { text: "Particle time: #{(1000 * @particle_update_time).round(0)}ms", x: 10, y: args.grid.h - 380, **color }
-        args.outputs.labels << { text: "Bullet time: #{(1000 * @bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 400, **color }
-        args.outputs.labels << { text: "Enemy Bullet time: #{(1000 * @enemy_bullet_update_time).round(0)}ms", x: 10, y: args.grid.h - 420, **color }
-        args.outputs.labels << { text: "Player time: #{(1000 * @player_update_time).round(0)}ms", x: 10, y: args.grid.h - 440, **color }
-        args.outputs.labels << { text: "DR version #{$gtk.version}", x: 10, y: 25, **color }
-      end
     end
   end
 

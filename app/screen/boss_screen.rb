@@ -62,7 +62,7 @@ class BossScreen < Screen
         @cam.look_at x, y + shake
       else
         @event_index = 2
-        args.audio[:music] = { input: "music/level1boss.mp3", gain: 0.7, looping: true }
+        args.audio[:music] = { input: "music/level1boss.mp3", gain: 0.5, looping: true }
         @event_time = 0
       end
     when 2
