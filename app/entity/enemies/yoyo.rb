@@ -5,7 +5,7 @@ class Yoyo < Enemy
     @max_speed = 60 / 60
     @cw = @ch = 15
     @max_health = @health = 70
-    @gems = [ { type:"sapphire"}, { type:"amber"}, { type:"amber"} ]
+    @gems = [ { type:"sapphire"}, { type:"emerald"}, { type:"amber"} ]
 
     @attacking = false
     @retreating = false
@@ -32,7 +32,7 @@ class Yoyo < Enemy
     end
     if @retreating
       @dy = 30 / 50
-      @render_deg -= 5
+      @render_deg += 5
     end
 
     @y += @dy

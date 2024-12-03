@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="110">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="140" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="114">
  <tileset firstgid="1" source="ship.tsx"/>
  <layer id="1" name="map" width="140" height="12">
   <data encoding="csv">
@@ -215,6 +215,18 @@
    <ellipse/>
   </object>
   <object id="107" name="amber" x="560" y="96">
+   <ellipse/>
+  </object>
+  <object id="110" name="amber" x="656" y="160">
+   <ellipse/>
+  </object>
+  <object id="111" name="amber" x="672" y="160">
+   <ellipse/>
+  </object>
+  <object id="112" name="amber" x="688" y="160">
+   <ellipse/>
+  </object>
+  <object id="113" name="amber" x="704" y="160">
    <ellipse/>
   </object>
  </objectgroup>

@@ -237,9 +237,6 @@ class Boss < Enemy
     ui_cam.render_box args, WIDTH / 2, HEIGHT - 8, w, 4, 0, 0, 0
     ui_cam.render_box args, WIDTH / 2 - (w - w2) / 2 + 1, HEIGHT - 8, w2, 2, 198, 216, 49
 
-    # render state
-    cam.render_text args, state_string, "fonts/m5x7.ttf", 12.66666, WIDTH / 2, HEIGHT / 2, 255, 255, 255, 255, 1, 1
-
     render_debug args, cam if args.state.debug
   end
   

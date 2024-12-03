@@ -74,6 +74,7 @@ class BossScreen < Screen
   end
 
   def finish args
+    $gtk.show_cursor
     args.state.sm.replace CongratsScreen.new args
   end
 

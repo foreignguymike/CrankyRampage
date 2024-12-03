@@ -34,28 +34,28 @@ class ShopScreen < Screen
         args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
-    @buttons << Button.new("Machine Gun - 200", WIDTH / 2, 100, 110, 15) {
+    @buttons << Button.new("Machine Gun - 200", WIDTH / 2, 100, 110, 13) {
       if @money >= 200 && @gun != "machinegun"
         @gun = "machinegun"
         @money -= 200
         args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
-    @buttons << Button.new("Triplet - 200", WIDTH / 2, 85, 110, 15) {
+    @buttons << Button.new("Triplet - 200", WIDTH / 2, 85, 110, 13) {
       if @money >= 200 && @gun != "triplet"
         @gun = "triplet"
         @money -= 200
         args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
-    @buttons << Button.new("Spreader - 200", WIDTH / 2, 70, 110, 15) {
+    @buttons << Button.new("Spreader - 200", WIDTH / 2, 70, 110, 13) {
       if @money >= 200 && @gun != "spreader"
         @gun = "spreader"
         @money -= 200
         args.audio[:sfx] = { input: "sounds/select.wav", gain: 0.5, looping: false }
       end
     }
-    @buttons << Button.new("Beam - 400", WIDTH / 2, 55, 110, 15) {
+    @buttons << Button.new("Beam - 400", WIDTH / 2, 55, 110, 13) {
       if @money >= 400 && @gun != "beam"
         @gun = "beam"
         @money -= 400
