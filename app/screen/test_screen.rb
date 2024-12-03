@@ -13,6 +13,7 @@ class TestScreen < Screen
     @player.money = (args.state.money ||= 0)
     @player.health = (args.state.health ||= @player.max_health)
     @player.max_health = (args.state.max_health ||= @player.max_health)
+    args.state.lives ||= 3
 
     parse_map
 
@@ -101,7 +102,7 @@ class TestScreen < Screen
     start_time = Time.now
     @enemies.reject! { |e| 
       e.update args, @player, @bullets, @enemy_bullets
-      if e.health <= 0
+      if e.dead?
         @particles << (Particle.new "explosion", e.x, e.y + 7, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x - 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
         @particles << (Particle.new "explosion", e.x + 5, e.y - 5, 32, 32, 0, 0, 8, 3, true)
@@ -160,7 +161,15 @@ class TestScreen < Screen
     @player.look_at mx, my
     start_time = Time.now
     @player.update args, @tiled_map.walls, @enemies, @enemy_bullets, @collectables
-    args.state.sm.replace TestScreen.new args, @map_id if @player.health <= 0
+    if @player.dead?
+      args.state.lives -= 1
+      if args.state.lives <= 0
+        $gtk.show_cursor
+        args.state.sm.replace GameOverScreen.new args
+      else
+        args.state.sm.replace TestScreen.new args, @map_id
+      end
+    end
     @player_update_time = Time.now - start_time
 
     # update cursor

@@ -43,6 +43,10 @@ class Entity
     @wg = nil
 	end
 
+  def dead?
+    @health <= 0
+  end
+
   def set_image args, region
     @image = args.state.assets.find region
     @w = @image.tile_w

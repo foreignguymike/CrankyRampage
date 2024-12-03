@@ -1,10 +1,10 @@
-class CongratsScreen < Screen
+class GameOverScreen < Screen
 
   def initialize args
     super()
 
     @buttons = []
-    @buttons << Button.new("Restart", WIDTH / 2, 20, 50, 15) {
+    @buttons << Button.new("Restart", WIDTH / 2, 20, 100, 15) {
       finish args
     }
 
@@ -26,7 +26,7 @@ class CongratsScreen < Screen
 
   def render args
     Utils.clear_screen args, 5, 33, 55, 255
-    @cam.render_text args, "Congrats!", "fonts/m5x7.ttf", 12.66666 * 1.5, WIDTH / 2, HEIGHT / 2, 255, 255, 255, 255, 1, 1
+    @cam.render_text args, "GAME OVER :(", "fonts/m5x7.ttf", 12.66666 * 1.5, WIDTH / 2, HEIGHT / 2, 255, 255, 255, 255, 1, 1
     @buttons.each { |b| b.render args, @cam }
   end
 

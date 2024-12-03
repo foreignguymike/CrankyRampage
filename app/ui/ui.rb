@@ -17,6 +17,10 @@ class UI
       count += 1
     }
 
+    # render lives
+    cam.render_image args, (args.state.assets.find "headhud"), WIDTH - 32, HEIGHT - 13, 20, 17
+    cam.render_text args, "x#{args.state.lives}", "fonts/m5x7.ttf", 12.66666, WIDTH - 18, HEIGHT - 13, 255, 255, 255
+
     # render money
     cam.render_image args, (args.state.assets.find "money"), 11, HEIGHT - 25, 12, 12
     cam.render_text args, "#{@player.money}", "fonts/m5x7.ttf", 12.66666, 22, HEIGHT - 25, 255, 255, 255

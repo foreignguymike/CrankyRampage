@@ -2,7 +2,9 @@ require 'app/camera'
 require 'app/constants'
 require 'app/screen/screen_manager'
 require 'app/screen/screen'
+require 'app/screen/title_screen'
 require 'app/screen/test_screen'
+require 'app/screen/game_over_screen'
 require 'app/screen/shop_screen'
 require 'app/screen/boss_screen'
 require 'app/screen/congrats_screen'
@@ -38,7 +40,8 @@ def setup_game args, force = false
   # args.state.money = 449
   # args.state.gun = "pistol"
   # args.state.sm.push ShopScreen.new args, "boss1"
-  args.state.sm.push TestScreen.new args, "level1-1"
+  # args.state.sm.push TestScreen.new args, "level1-1"
+  args.state.sm.push TitleScreen.new args
 end
 
 def tick args
